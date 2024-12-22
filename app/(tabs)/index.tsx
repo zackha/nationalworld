@@ -1,18 +1,24 @@
-import { Image, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { NewsItemComponent } from '@/components/NewsItem';
+import type { NewsItem } from '@/types';
+import { fetchNews } from '@/services/api';
 
 export default function HomeScreen() {
+  const [newsData, setNewsData] = useState<NewsItem[]>([]);
+
+  useEffect(() => {
+    fetchNews().then((newsItems: NewsItem[]) => {
+      setNewsData(newsItems);
+    });
+  }, []);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={<Image source={require('@/assets/images/partial-react-logo.png')} style={styles.reactLogo} />}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ThemedView style={styles.titleContainer}>
+      <FlatList data={newsData} renderItem={({ item }) => <NewsItemComponent item={item} />} keyExtractor={item => item.guid} showsVerticalScrollIndicator={false} />
+    </ThemedView>
   );
 }
 

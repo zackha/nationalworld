@@ -1,17 +1,25 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import type { Props } from '@/types';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 export function NewsItemComponent({ item }: Props) {
   return (
     <TouchableOpacity style={styles.container}>
-      <Image source={{ uri: item.mediaUrl }} style={styles.image} />
+      <Image source={{ uri: item.image }} style={styles.image} />
       <View style={styles.content}>
+        <Text style={styles.time}>{item.creator}</Text>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
-        <Text style={styles.meta}>
-          {item.creator} | {new Date(item.pubDate).toLocaleString()}
-        </Text>
-        <Text style={styles.category}>{item.category}</Text>
+        <Text style={styles.description}>{item.description.replace(/<\/?[^>]+(>|$)/g, '')}</Text>
+        <View style={styles.categories}>
+          {item.categories.map((category, index) => (
+            <Text key={index} style={styles.category}>
+              # {category}
+            </Text>
+          ))}
+        </View>
+        <Text style={styles.time}>{dayjs(item.pubDate).fromNow()}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -22,7 +30,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#333',
-    borderRadius: 12,
     backgroundColor: '#0f0f0f',
     shadowColor: '#111',
     shadowOffset: { width: 0, height: 0 },
@@ -32,31 +39,37 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 150,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
   },
   content: {
     padding: 16,
+    gap: 10,
   },
   title: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-    marginVertical: 8,
   },
   description: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 8,
-  },
-  meta: {
     fontSize: 12,
-    color: '#777',
-    marginBottom: 8,
+    color: '#555',
+    marginBottom: 4,
+  },
+  categories: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 10,
   },
   category: {
     fontSize: 12,
-    fontStyle: 'italic',
-    color: '#444',
+    color: '#999',
+    backgroundColor: '#333',
+    paddingVertical: 4,
+    paddingHorizontal: 9,
+    borderRadius: 99,
+  },
+  time: {
+    fontSize: 10,
+    color: '#777',
   },
 });

@@ -1,13 +1,13 @@
-export interface NewsItem {
+export type NewsItem = {
   title: string;
   link: string;
   description: string;
   pubDate: string;
-  mediaUrl: string;
-  mediaCredit: string;
+  guid: string;
   creator: string;
-  category: string;
-}
+  categories: string[];
+  image: string;
+};
 
 export interface Props {
   item: NewsItem;
