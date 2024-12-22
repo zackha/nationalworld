@@ -12,13 +12,15 @@ export function NewsItemComponent({ item }: Props) {
         <Text style={styles.time}>{item.creator}</Text>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.description}>{item.description.replace(/<\/?[^>]+(>|$)/g, '')}</Text>
-        <View style={styles.categories}>
-          {item.categories.map((category, index) => (
-            <Text key={index} style={styles.category}>
-              # {category}
-            </Text>
-          ))}
-        </View>
+        {item.categories.length > 0 && (
+          <View style={styles.categories}>
+            {item.categories.map((category, index) => (
+              <Text key={index} style={styles.category}>
+                # {category}
+              </Text>
+            ))}
+          </View>
+        )}
         <Text style={styles.time}>{dayjs(item.pubDate).fromNow()}</Text>
       </View>
     </TouchableOpacity>
