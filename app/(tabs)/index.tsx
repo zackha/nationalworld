@@ -33,6 +33,7 @@ export default function HomeScreen() {
         keyExtractor={item => item.guid}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        contentContainerStyle={styles.newsList}
       />
     </ThemedView>
   );
@@ -40,6 +41,10 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 35,
+    marginBottom: 35,
+  },
+  newsList: {
+    paddingTop: 50,
+    paddingHorizontal: 20,
   },
 });
