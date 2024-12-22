@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, RefreshControl } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
 import { NewsItemComponent } from '@/components/NewsItem';
@@ -8,16 +8,32 @@ import { fetchNews } from '@/services/api';
 
 export default function HomeScreen() {
   const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const loadNews = async () => {
+    const newsItems: NewsItem[] = await fetchNews();
+    setNewsData(newsItems);
+  };
 
   useEffect(() => {
-    fetchNews().then((newsItems: NewsItem[]) => {
-      setNewsData(newsItems);
-    });
+    loadNews();
   }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadNews();
+    setRefreshing(false);
+  };
 
   return (
     <ThemedView style={styles.titleContainer}>
-      <FlatList data={newsData} renderItem={({ item }) => <NewsItemComponent item={item} />} keyExtractor={item => item.guid} showsVerticalScrollIndicator={false} />
+      <FlatList
+        data={newsData}
+        renderItem={({ item }) => <NewsItemComponent item={item} />}
+        keyExtractor={item => item.guid}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      />
     </ThemedView>
   );
 }
