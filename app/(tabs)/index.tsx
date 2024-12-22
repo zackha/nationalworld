@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, FlatList, RefreshControl } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
@@ -10,23 +10,23 @@ export default function HomeScreen() {
   const [newsData, setNewsData] = useState<NewsItem[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadNews = async () => {
-    const newsItems: NewsItem[] = await fetchNews();
+  const loadNews = useCallback(async () => {
+    const newsItems = await fetchNews();
     setNewsData(newsItems);
-  };
+  }, []);
 
   useEffect(() => {
     loadNews();
-  }, []);
+  }, [loadNews]);
 
-  const onRefresh = async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await loadNews();
     setRefreshing(false);
-  };
+  }, [loadNews]);
 
   return (
-    <ThemedView style={styles.titleContainer}>
+    <ThemedView style={styles.container}>
       <FlatList
         data={newsData}
         renderItem={({ item }) => <NewsItemComponent item={item} />}
@@ -39,20 +39,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  container: {
+    marginVertical: 35,
   },
 });
