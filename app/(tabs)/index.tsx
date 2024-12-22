@@ -26,7 +26,7 @@ export default function HomeScreen() {
   }, [loadNews]);
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView>
       <FlatList
         data={newsData}
         renderItem={({ item }) => <NewsItemComponent item={item} />}
@@ -40,11 +40,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 35,
-  },
   newsList: {
-    paddingTop: 50,
     paddingHorizontal: 20,
   },
 });
