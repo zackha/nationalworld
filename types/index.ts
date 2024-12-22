@@ -8,3 +8,7 @@ export interface NewsItem {
   creator: string;
   category: string;
 }
+
+export interface Props {
+  item: NewsItem;
+}

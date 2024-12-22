@@ -1,15 +1,9 @@
-import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import type { NewsItem } from '@/types';
+import type { Props } from '@/types';
 
-interface Props {
-  item: NewsItem;
-  onPress: (url: string) => void;
-}
-
-export function NewsItemComponent({ item, onPress }: Props) {
+export function NewsItemComponent({ item }: Props) {
   return (
-    <TouchableOpacity onPress={() => onPress(item.link)} style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       <Image source={{ uri: item.mediaUrl }} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.title}>{item.title}</Text>

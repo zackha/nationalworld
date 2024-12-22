@@ -1,43 +1,36 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { FlatList, StyleSheet, Alert } from 'react-native';
-import { fetchNews } from '@/services/api';
-import type { NewsItem } from '@/types';
-import { NewsItemComponent } from '@/components/NewsItem';
+import { Image, StyleSheet, Platform } from 'react-native';
 
-const HomeScreen = () => {
-  const [news, setNews] = useState<NewsItem[]>([]);
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 
-  const loadNews = useCallback(async () => {
-    try {
-      const newsData = await fetchNews();
-      setNews(newsData);
-    } catch {
-      Alert.alert('Error', 'Failed to fetch news.');
-    }
-  }, []);
-
-  useEffect(() => {
-    loadNews();
-  }, [loadNews]);
-
-  const handlePress = (url: string) => {
-    Alert.alert('News URL', url);
-  };
-
+export default function HomeScreen() {
   return (
-    <FlatList
-      data={news}
-      keyExtractor={item => item.link}
-      renderItem={({ item }) => <NewsItemComponent item={item} onPress={handlePress} />}
-      contentContainerStyle={styles.newsList}
-    />
+    <ParallaxScrollView
+      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerImage={<Image source={require('@/assets/images/partial-react-logo.png')} style={styles.reactLogo} />}>
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">Welcome!</ThemedText>
+      </ThemedView>
+    </ParallaxScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  newsList: {
-    paddingHorizontal: 16,
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  stepContainer: {
+    gap: 8,
+    marginBottom: 8,
+  },
+  reactLogo: {
+    height: 178,
+    width: 290,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
   },
 });
-
-export default HomeScreen;
