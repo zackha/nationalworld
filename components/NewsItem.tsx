@@ -12,13 +12,15 @@ export function NewsItemComponent({ item }: Props) {
         <Text style={styles.time}>{item.creator}</Text>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.description}>{item.description.replace(/<\/?[^>]+(>|$)/g, '')}</Text>
-        <View style={styles.categories}>
-          {item.categories.map((category, index) => (
-            <Text key={index} style={styles.category}>
-              # {category}
-            </Text>
-          ))}
-        </View>
+        {item.categories.length > 0 && (
+          <View style={styles.categories}>
+            {item.categories.map((category, index) => (
+              <Text key={index} style={styles.category}>
+                # {category}
+              </Text>
+            ))}
+          </View>
+        )}
         <Text style={styles.time}>{dayjs(item.pubDate).fromNow()}</Text>
       </View>
     </TouchableOpacity>
@@ -30,15 +32,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#333',
-    backgroundColor: '#0f0f0f',
-    shadowColor: '#111',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
+    backgroundColor: '#141414',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    borderRadius: 12,
   },
   image: {
     width: '100%',
     height: 150,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
   },
   content: {
     padding: 16,

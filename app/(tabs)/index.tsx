@@ -1,42 +1,49 @@
-import { useEffect, useState } from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import { useEffect, useState, useCallback } from 'react';
+import { StyleSheet, FlatList, RefreshControl } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
 import { NewsItemComponent } from '@/components/NewsItem';
 import type { NewsItem } from '@/types';
 import { fetchNews } from '@/services/api';
+import { Header } from '@/components/Header';
 
 export default function HomeScreen() {
   const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    fetchNews().then((newsItems: NewsItem[]) => {
-      setNewsData(newsItems);
-    });
+  const loadNews = useCallback(async () => {
+    const newsItems = await fetchNews();
+    setNewsData(newsItems);
   }, []);
 
+  useEffect(() => {
+    loadNews();
+  }, [loadNews]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await loadNews();
+    setRefreshing(false);
+  }, [loadNews]);
+
   return (
-    <ThemedView style={styles.titleContainer}>
-      <FlatList data={newsData} renderItem={({ item }) => <NewsItemComponent item={item} />} keyExtractor={item => item.guid} showsVerticalScrollIndicator={false} />
+    <ThemedView>
+      <Header />
+      <FlatList
+        data={newsData}
+        renderItem={({ item }) => <NewsItemComponent item={item} />}
+        keyExtractor={item => item.guid}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        contentContainerStyle={styles.newsList}
+      />
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  newsList: {
+    padding: 20,
+    // backgroundColor: 'red',
   },
 });
