@@ -5,6 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { NewsItemComponent } from '@/components/NewsItem';
 import type { NewsItem } from '@/types';
 import { fetchNews } from '@/services/api';
+import { Header } from '@/components/Header';
 
 export default function HomeScreen() {
   const [newsData, setNewsData] = useState<NewsItem[]>([]);
@@ -27,6 +28,7 @@ export default function HomeScreen() {
 
   return (
     <ThemedView>
+      <Header />
       <FlatList
         data={newsData}
         renderItem={({ item }) => <NewsItemComponent item={item} />}
@@ -41,6 +43,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   newsList: {
-    paddingHorizontal: 20,
+    padding: 20,
+    // backgroundColor: 'red',
   },
 });

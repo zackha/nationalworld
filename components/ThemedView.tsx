@@ -13,7 +13,7 @@ export function ThemedView({ lightColor, darkColor, ...otherProps }: ThemedViewP
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={[{ flex: 1, backgroundColor, paddingBottom: 50 }]} edges={['top', 'bottom']} {...otherProps} />
+      <SafeAreaView style={[{ flex: 1, backgroundColor, paddingBottom: 30 }]} edges={['top', 'bottom']} {...otherProps} />
     </SafeAreaProvider>
   );
 }
