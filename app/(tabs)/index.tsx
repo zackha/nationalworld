@@ -3,17 +3,18 @@ import { StyleSheet, FlatList, RefreshControl } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
 import { NewsItemComponent } from '@/components/NewsItem';
-import type { NewsItem } from '@/types';
-import { fetchNews } from '@/services/api';
+import type { NewsItemWp } from '@/types';
+import { fetchNews } from '@/services/apiWp';
 import { Header } from '@/components/Header';
 
 export default function HomeScreen() {
-  const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [newsData, setNewsData] = useState<NewsItemWp[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const loadNews = useCallback(async () => {
     const newsItems = await fetchNews();
     setNewsData(newsItems);
+    console.log(newsItems);
   }, []);
 
   useEffect(() => {
