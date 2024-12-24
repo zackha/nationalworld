@@ -28,7 +28,7 @@ export interface WPPost {
   link: string;
   author: number;
   categories: number[];
-  featured_media: number;
+  content: { rendered: string };
 }
 
 export interface Props {

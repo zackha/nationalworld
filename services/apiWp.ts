@@ -15,9 +15,14 @@ const api = wretch(API_WP).options({
 //    .json(result => result.media_details?.sizes?.medium_large?.source_url);
 //};
 
+export const extractImageUrl = (description: string): string | null => {
+  const match = description.match(/https?:\/\/[^\s]+(?=\s768w|748w)|<img[^>]+src="([^"]+)"/);
+  return match ? match[1] || match[0] : null;
+};
+
 export const fetchNews = async (page: number = 1): Promise<NewsItemWp[]> => {
   return api
-    .url(`/wp-json/wp/v2/posts?order_by=date&per_page=12&page=${page}`)
+    .url(`/wp-json/wp/v2/posts?order_by=date&per_page=20&page=${page}`)
     .get()
     .json(result =>
       result.map((item: WPPost) => ({
@@ -28,7 +33,7 @@ export const fetchNews = async (page: number = 1): Promise<NewsItemWp[]> => {
         guid: item.id,
         creator: item.author,
         categories: item.categories,
-        image: item.featured_media,
+        image: extractImageUrl(item.content.rendered),
       }))
     );
 };
