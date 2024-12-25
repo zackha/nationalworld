@@ -8,46 +8,56 @@ dayjs.extend(relativeTime);
 export function NewsItemComponent({ item, index }: Props & { index: number }) {
   if (index === 0) {
     return (
-      <View style={styles.featuredItem}>
+      <View>
         <Image source={{ uri: item.image }} style={styles.featuredImage} />
         <View style={styles.featuredContent}>
           <Text style={styles.featuredTitle}>{decodeHTML(item.title)}</Text>
-          <Text style={styles.featuredDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+          <Text style={styles.description}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+          <View style={styles.metaInfo}>
+            <Text style={styles.metaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+            <View style={styles.metaInfoDivider} />
+            <Text style={styles.metaInfoText}>World</Text>
+          </View>
         </View>
       </View>
     );
   } else if (index === 1 || index === 2) {
     return (
-      <View style={styles.secondaryItem}>
+      <View style={styles.secondaryContainer}>
         <Image source={{ uri: item.image }} style={styles.secondaryImage} />
         <View style={styles.secondaryContent}>
-          <Text style={styles.secondaryTitle}>{decodeHTML(item.title)}</Text>
-          <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-            <Text style={styles.timeAndCategory}>{dayjs(item.pubDate).fromNow()}</Text>
-            <View style={styles.divider} />
-            <Text style={styles.timeAndCategory}>World</Text>
+          <Text style={styles.listItemTitle}>{decodeHTML(item.title)}</Text>
+          <View style={styles.metaInfo}>
+            <Text style={styles.metaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+            <View style={styles.metaInfoDivider} />
+            <Text style={styles.metaInfoText}>World</Text>
           </View>
         </View>
       </View>
     );
   } else {
     return (
-      <View style={styles.simpleItem}>
-        <Text style={styles.secondaryTitle}>{decodeHTML(item.title)}</Text>
-        <Text style={styles.simpleDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+      <View style={styles.listItemContainer}>
+        <Text style={styles.listItemTitle}>{decodeHTML(item.title)}</Text>
+        <Text style={styles.description}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+        <View style={styles.metaInfo}>
+          <Text style={styles.metaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+          <View style={styles.metaInfoDivider} />
+          <Text style={styles.metaInfoText}>World</Text>
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  featuredItem: {},
   featuredImage: {
     width: '100%',
     height: 215,
   },
   featuredContent: {
     margin: 14,
+    marginBottom: 0,
     gap: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
@@ -59,12 +69,12 @@ const styles = StyleSheet.create({
     fontFamily: 'BBCReithSerifMd',
     letterSpacing: -0.8,
   },
-  featuredDescription: {
+  description: {
     fontSize: 14,
     color: '#fff',
     fontFamily: 'BBCReithSerifRg',
   },
-  secondaryItem: {
+  secondaryContainer: {
     flexDirection: 'row',
     marginHorizontal: 14,
     gap: 8,
@@ -79,9 +89,9 @@ const styles = StyleSheet.create({
   },
   secondaryContent: {
     flex: 1,
-    gap: 14,
+    gap: 6,
   },
-  secondaryTitle: {
+  listItemTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
@@ -92,8 +102,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#fff',
   },
-  simpleItem: {
+  listItemContainer: {
     marginHorizontal: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingVertical: 14,
+    gap: 8,
   },
   simpleTitle: {
     fontSize: 14,
@@ -104,13 +118,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#fff',
   },
-  timeAndCategory: {
+  metaInfo: {
+    marginTop: 8,
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  metaInfoText: {
     fontSize: 12,
     color: '#999',
     fontFamily: 'BBCReithSansrg',
   },
-  divider: {
-    height: '100%',
+  metaInfoDivider: {
+    height: '80%',
     width: 1,
     backgroundColor: '#fff',
     marginHorizontal: 4,
