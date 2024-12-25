@@ -14,7 +14,6 @@ export default function HomeScreen() {
   const loadNews = useCallback(async () => {
     const newsItems = await fetchNews();
     setNewsData(newsItems);
-    console.log(newsItems);
   }, []);
 
   useEffect(() => {
@@ -31,8 +30,13 @@ export default function HomeScreen() {
     <ThemedView>
       <Header />
       <FlatList
+        windowSize={6}
+        key="blogHome"
+        removeClippedSubviews
+        initialNumToRender={6}
+        maxToRenderPerBatch={6}
         data={newsData}
-        renderItem={({ item }) => <NewsItemComponent item={item} />}
+        renderItem={({ item, index }) => <NewsItemComponent item={item} index={index} />}
         keyExtractor={item => item.guid}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -44,7 +48,6 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   newsList: {
-    padding: 20,
     // backgroundColor: 'red',
   },
 });

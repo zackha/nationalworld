@@ -14,7 +14,10 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    BBCReithSerifMd: require('@/assets/fonts/BBCReithSerif_A_Md.ttf'),
+    BBCReithSerifRg: require('@/assets/fonts/BBCReithSerif_A_Rg.ttf'),
+    BBCReithSansMd: require('@/assets/fonts/BBCReithSans_A_Md.ttf'),
+    BBCReithSansrg: require('@/assets/fonts/BBCReithSans_A_Rg.ttf'),
   });
 
   useEffect(() => {

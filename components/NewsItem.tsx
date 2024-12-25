@@ -1,79 +1,118 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { decodeHTML } from 'entities';
 import type { Props } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-export function NewsItemComponent({ item }: Props) {
-  return (
-    <TouchableOpacity style={styles.container}>
-      <Image source={{ uri: item.image }} style={styles.image} />
-      <View style={styles.content}>
-        <Text style={styles.time}>{item.creator}</Text>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description.replace(/<\/?[^>]+(>|$)/g, '')}</Text>
-        {item.categories.length > 0 && (
-          <View style={styles.categories}>
-            {item.categories.map((category, index) => (
-              <Text key={index} style={styles.category}>
-                # {category}
-              </Text>
-            ))}
-          </View>
-        )}
-        <Text style={styles.time}>{dayjs(item.pubDate).fromNow()}</Text>
+export function NewsItemComponent({ item, index }: Props & { index: number }) {
+  if (index === 0) {
+    return (
+      <View style={styles.featuredItem}>
+        <Image source={{ uri: item.image }} style={styles.featuredImage} />
+        <View style={styles.featuredContent}>
+          <Text style={styles.featuredTitle}>{decodeHTML(item.title)}</Text>
+          <Text style={styles.featuredDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+        </View>
       </View>
-    </TouchableOpacity>
-  );
+    );
+  } else if (index === 1 || index === 2) {
+    return (
+      <View style={styles.secondaryItem}>
+        <Image source={{ uri: item.image }} style={styles.secondaryImage} />
+        <View style={styles.secondaryContent}>
+          <Text style={styles.secondaryTitle}>{decodeHTML(item.title)}</Text>
+          <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+            <Text style={styles.timeAndCategory}>{dayjs(item.pubDate).fromNow()}</Text>
+            <View style={styles.divider} />
+            <Text style={styles.timeAndCategory}>World</Text>
+          </View>
+        </View>
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.simpleItem}>
+        <Text style={styles.secondaryTitle}>{decodeHTML(item.title)}</Text>
+        <Text style={styles.simpleDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#333',
-    backgroundColor: '#141414',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    borderRadius: 12,
-  },
-  image: {
+  featuredItem: {},
+  featuredImage: {
     width: '100%',
-    height: 150,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    height: 215,
   },
-  content: {
-    padding: 16,
-    gap: 10,
+  featuredContent: {
+    margin: 14,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingBottom: 12,
   },
-  title: {
+  featuredTitle: {
+    fontSize: 24,
     color: '#fff',
+    fontFamily: 'BBCReithSerifMd',
+    letterSpacing: -0.8,
+  },
+  featuredDescription: {
+    fontSize: 14,
+    color: '#fff',
+    fontFamily: 'BBCReithSerifRg',
+  },
+  secondaryItem: {
+    flexDirection: 'row',
+    marginHorizontal: 14,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingVertical: 14,
+  },
+  secondaryImage: {
+    height: 80,
+    width: '35%',
+    objectFit: 'cover',
+  },
+  secondaryContent: {
+    flex: 1,
+    gap: 14,
+  },
+  secondaryTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#fff',
+    fontFamily: 'BBCReithSerifMd',
+    letterSpacing: -0.8,
   },
-  description: {
+  secondaryDescription: {
     fontSize: 12,
-    color: '#555',
-    marginBottom: 4,
+    color: '#fff',
   },
-  categories: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 10,
+  simpleItem: {
+    marginHorizontal: 14,
   },
-  category: {
+  simpleTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  simpleDescription: {
+    fontSize: 12,
+    color: '#fff',
+  },
+  timeAndCategory: {
     fontSize: 12,
     color: '#999',
-    backgroundColor: '#333',
-    paddingVertical: 4,
-    paddingHorizontal: 9,
-    borderRadius: 99,
+    fontFamily: 'BBCReithSansrg',
   },
-  time: {
-    fontSize: 10,
-    color: '#777',
+  divider: {
+    height: '100%',
+    width: 1,
+    backgroundColor: '#fff',
+    marginHorizontal: 4,
   },
 });
