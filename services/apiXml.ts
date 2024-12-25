@@ -1,17 +1,17 @@
 import { XMLParser } from 'fast-xml-parser';
-import type { NewsItem } from '@/types';
+import type { NewsItemXml } from '@/types';
 
-const API_URL = 'https://www.nationalworld.com/rss';
+const API_XML = 'https://www.nationalworld.com/rss';
 
-export const fetchNews = async (): Promise<NewsItem[]> => {
-  const response = await fetch(API_URL);
+export const fetchNews = async (): Promise<NewsItemXml[]> => {
+  const response = await fetch(API_XML);
   const xmlData = await response.text();
   const parser = new XMLParser({
     ignoreAttributes: false,
   });
   const parsedData = parser.parse(xmlData);
 
-  const newsItems: NewsItem[] = parsedData.rss.channel.item.map((item: any) => ({
+  const newsItems: NewsItemXml[] = parsedData.rss.channel.item.map((item: any) => ({
     title: item.title,
     link: item.link,
     description: item.description,

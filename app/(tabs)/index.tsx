@@ -3,12 +3,12 @@ import { StyleSheet, FlatList, RefreshControl } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
 import { NewsItemComponent } from '@/components/NewsItem';
-import type { NewsItem } from '@/types';
-import { fetchNews } from '@/services/api';
+import type { NewsItemWp } from '@/types';
+import { fetchNews } from '@/services/apiWp';
 import { Header } from '@/components/Header';
 
 export default function HomeScreen() {
-  const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [newsData, setNewsData] = useState<NewsItemWp[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const loadNews = useCallback(async () => {
@@ -30,8 +30,13 @@ export default function HomeScreen() {
     <ThemedView>
       <Header />
       <FlatList
+        windowSize={6}
+        key="blogHome"
+        removeClippedSubviews
+        initialNumToRender={6}
+        maxToRenderPerBatch={6}
         data={newsData}
-        renderItem={({ item }) => <NewsItemComponent item={item} />}
+        renderItem={({ item, index }) => <NewsItemComponent item={item} index={index} />}
         keyExtractor={item => item.guid}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -43,7 +48,6 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   newsList: {
-    padding: 20,
     // backgroundColor: 'red',
   },
 });

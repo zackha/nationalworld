@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Logo from '@/components/Logo';
 
-const categories = ['All', 'News', 'Business', 'Technology', 'Sports', 'Entertainment', 'Science', 'Health'];
+const categories = ['All', 'News', 'Business', 'Innovation', 'Culture', 'Entertainment', 'Science', 'Health'];
 
 export function Header() {
   return (
@@ -11,9 +11,10 @@ export function Header() {
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryList}>
         {categories.map((category, index) => (
-          <Text key={index} style={styles.categoryText}>
-            {category}
-          </Text>
+          <View key={index} style={styles.categoryContainer}>
+            <Text style={styles.categoryText}>{category}</Text>
+            {index < categories.length - 1 && <View style={styles.divider} />}
+          </View>
         ))}
       </ScrollView>
     </View>
@@ -22,25 +23,37 @@ export function Header() {
 
 const styles = StyleSheet.create({
   header: {
-    // backgroundColor: 'pink',
     alignItems: 'center',
   },
   logoContainer: {
-    paddingVertical: 4,
     // backgroundColor: 'blue',
+    paddingVertical: 4,
     alignItems: 'center',
     width: '100%',
+    height: 40,
+    color: '#fff',
   },
   categoryList: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
     // backgroundColor: 'green',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#444',
+  },
+  categoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   categoryText: {
-    fontSize: 14,
-    color: 'white',
-    marginRight: 20,
-    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#fff',
+    fontFamily: 'BBCReithSansMd',
+  },
+  divider: {
+    height: '65%',
+    width: 1,
+    backgroundColor: '#444',
+    marginHorizontal: 12,
   },
 });
