@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { fetchNews, categoriesData } from '@/services/apiWp';
 import type { NewsItemWp } from '@/types';
@@ -7,29 +7,32 @@ import type { NewsItemWp } from '@/types';
 const screenWidth = Dimensions.get('window').width;
 
 export default function HomeScreen() {
-  const [newsData, setNewsData] = useState<NewsItemWp[]>([]);
+  const [newsData, setNewsData] = useState<{ [key: string]: NewsItemWp[] }>({});
+  const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
   const flatListRef = useRef<FlatList<string>>(null);
   const newsListRef = useRef<FlatList<string>>(null);
 
-  const loadNews = useCallback(async (categoryId: number) => {
+  const loadNews = useCallback(async (categoryId: number, categoryName: string) => {
+    setLoading(prev => ({ ...prev, [categoryName]: true }));
     const newsItems = await fetchNews(1, categoryId);
-    setNewsData(newsItems);
+    setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
+    setLoading(prev => ({ ...prev, [categoryName]: false }));
   }, []);
 
   useEffect(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
-    if (category) {
-      loadNews(category.id);
+    if (category && !newsData[selectedCategory]) {
+      loadNews(category.id, selectedCategory);
     }
-  }, [selectedCategory, loadNews]);
+  }, [selectedCategory, loadNews, newsData]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     const category = categoriesData.find(c => c.name === selectedCategory);
     if (category) {
-      await loadNews(category.id);
+      await loadNews(category.id, selectedCategory);
     }
     setRefreshing(false);
   }, [loadNews, selectedCategory]);
@@ -71,25 +74,44 @@ export default function HomeScreen() {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
+          onScrollBeginDrag={event => {
+            const offsetX = event.nativeEvent.contentOffset.x;
+            const index = Math.round(offsetX / screenWidth);
+            const nextIndex = Math.min(categoriesData.length - 1, index + 1); // Hedef indeks
+            const nextCategory = categoriesData[nextIndex].name;
+
+            if (!newsData[nextCategory] && !loading[nextCategory]) {
+              const category = categoriesData.find(c => c.name === nextCategory);
+              if (category) {
+                loadNews(category.id, nextCategory);
+              }
+            }
+          }}
           onMomentumScrollEnd={event => {
             const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
             setSelectedCategory(categoriesData[index].name);
             flatListRef.current?.scrollToIndex({ index, animated: true });
           }}
-          renderItem={() => (
-            <FlatList
-              windowSize={6}
-              key="articles"
-              removeClippedSubviews
-              initialNumToRender={6}
-              maxToRenderPerBatch={6}
-              data={newsData}
-              keyExtractor={item => item.guid}
-              renderItem={renderNewsItem}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.newsList}
-            />
+          renderItem={({ item }) => (
+            <View style={{ width: screenWidth }}>
+              {loading[item] ? (
+                <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+              ) : (
+                <FlatList
+                  windowSize={6}
+                  key="articles"
+                  removeClippedSubviews
+                  initialNumToRender={6}
+                  maxToRenderPerBatch={6}
+                  data={newsData[item]}
+                  keyExtractor={newsItem => newsItem.guid}
+                  renderItem={renderNewsItem}
+                  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={styles.newsList}
+                />
+              )}
+            </View>
           )}
         />
       </View>
@@ -135,5 +157,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
