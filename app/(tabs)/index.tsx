@@ -14,14 +14,23 @@ export default function HomeScreen() {
   const flatListRef = useRef<FlatList<string>>(null);
   const newsListRef = useRef<FlatList<string>>(null);
 
-  const loadNews = useCallback(async (categoryId: number, categoryName: string) => {
-    console.log(`Fetching...... ${categoryName} (ID: ${categoryId})`);
-    setLoading(prev => ({ ...prev, [categoryName]: true }));
-    const newsItems = await fetchNews(1, categoryId);
-    console.log(`Fetched! ${categoryName}`);
-    setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
-    setLoading(prev => ({ ...prev, [categoryName]: false }));
-  }, []);
+  const loadNews = useCallback(
+    async (categoryId: number, categoryName: string) => {
+      if (loading[categoryName] || newsData[categoryName]) return;
+      console.log(`Fetching...... ${categoryName} (ID: ${categoryId})`);
+      setLoading(prev => ({ ...prev, [categoryName]: true }));
+      try {
+        const newsItems = await fetchNews(1, categoryId);
+        console.log(`Fetched! ${categoryName}`);
+        setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
+      } catch (error) {
+        console.error(`Error fetching news for ${categoryName}:`, error);
+      } finally {
+        setLoading(prev => ({ ...prev, [categoryName]: false }));
+      }
+    },
+    [loading, newsData]
+  );
 
   useEffect(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
@@ -52,10 +61,13 @@ export default function HomeScreen() {
     </TouchableOpacity>
   );
 
-  const renderNewsItem = ({ item }: { item: NewsItemWp }) => (
-    <View style={styles.newsItem}>
-      <Text style={styles.newsText}>{item.title}</Text>
-    </View>
+  const renderNewsItem = useCallback(
+    ({ item }: { item: NewsItemWp }) => (
+      <View style={styles.newsItem}>
+        <Text style={styles.newsText}>{item.title}</Text>
+      </View>
+    ),
+    []
   );
 
   return (
