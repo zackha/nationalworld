@@ -88,19 +88,6 @@ export default function HomeScreen() {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
-          onScrollBeginDrag={event => {
-            const offsetX = event.nativeEvent.contentOffset.x;
-            const index = Math.round(offsetX / screenWidth);
-            const nextIndex = Math.min(categoriesData.length - 1, index + 1);
-            const nextCategory = categoriesData[nextIndex].name;
-
-            if (!newsData[nextCategory] && !loading[nextCategory]) {
-              const category = categoriesData.find(c => c.name === nextCategory);
-              if (category) {
-                loadNews(category.id, nextCategory);
-              }
-            }
-          }}
           getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
           onMomentumScrollEnd={event => {
             const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
