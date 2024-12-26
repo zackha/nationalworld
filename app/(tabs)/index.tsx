@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { fetchNews, categoriesData } from '@/services/apiWp';
@@ -14,31 +14,19 @@ export default function HomeScreen() {
   const flatListRef = useRef<FlatList<string>>(null);
   const newsListRef = useRef<FlatList<string>>(null);
 
-  const loadNews = useCallback(
-    async (categoryId: number, categoryName: string) => {
-      if (!loading[categoryName]) {
-        setLoading(prev => ({ ...prev, [categoryName]: true }));
-        console.log(`Fetching news for category: ${categoryName}`);
-        try {
-          const newsItems = await fetchNews(1, categoryId);
-          console.log(`Fetched ${newsItems.length} items for category: ${categoryName}`);
-          setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
-        } catch (error) {
-          console.error(`Error fetching news for category: ${categoryName}`, error);
-        } finally {
-          setLoading(prev => ({ ...prev, [categoryName]: false }));
-        }
-      }
-    },
-    [loading]
-  );
+  const loadNews = useCallback(async (categoryId: number, categoryName: string) => {
+    setLoading(prev => ({ ...prev, [categoryName]: true }));
+    const newsItems = await fetchNews(1, categoryId);
+    setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
+    setLoading(prev => ({ ...prev, [categoryName]: false }));
+  }, []);
 
   useEffect(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
     if (category && !newsData[selectedCategory]) {
       loadNews(category.id, selectedCategory);
     }
-  }, [selectedCategory, newsData]);
+  }, [selectedCategory, loadNews, newsData]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -49,56 +37,23 @@ export default function HomeScreen() {
     setRefreshing(false);
   }, [loadNews, selectedCategory]);
 
-  const handleScroll = useCallback(
-    (event: { nativeEvent: { contentOffset: { x: number } } }) => {
-      const offsetX = event.nativeEvent.contentOffset.x;
-      const currentIndex = Math.round(offsetX / screenWidth);
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+    const index = categoriesData.findIndex(c => c.name === category);
+    newsListRef.current?.scrollToIndex({ index, animated: true });
+  };
 
-      const adjacentIndexes = [Math.max(0, currentIndex - 1), Math.min(categoriesData.length - 1, currentIndex + 1)];
-
-      adjacentIndexes.forEach(index => {
-        const category = categoriesData[index];
-        if (!newsData[category.name]) {
-          loadNews(category.id, category.name);
-        }
-      });
-    },
-    [loadNews, newsData]
+  const renderCategoryItem = ({ item }: { item: string }) => (
+    <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.categoryButton}>
+      <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
+      {item === selectedCategory && <View style={styles.underline} />}
+    </TouchableOpacity>
   );
 
-  const handleCategorySelect = useCallback(
-    (categoryName: string) => {
-      setSelectedCategory(categoryName);
-      const index = categoriesData.findIndex(c => c.name === categoryName);
-
-      if (index !== -1) {
-        newsListRef.current?.scrollToIndex({ index, animated: true });
-      }
-    },
-    [categoriesData]
-  );
-
-  const renderCategoryItem = useMemo(
-    () =>
-      ({ item }: { item: string }) =>
-        (
-          <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.categoryButton}>
-            <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
-            {item === selectedCategory && <View style={styles.underline} />}
-          </TouchableOpacity>
-        ),
-    [selectedCategory, handleCategorySelect]
-  );
-
-  const renderNewsItem = useMemo(
-    () =>
-      ({ item }: { item: NewsItemWp }) =>
-        (
-          <View style={styles.newsItem}>
-            <Text style={styles.newsText}>{item.title}</Text>
-          </View>
-        ),
-    []
+  const renderNewsItem = ({ item }: { item: NewsItemWp }) => (
+    <View style={styles.newsItem}>
+      <Text style={styles.newsText}>{item.title}</Text>
+    </View>
   );
 
   return (
@@ -119,16 +74,23 @@ export default function HomeScreen() {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
-          onScroll={handleScroll}
-          onMomentumScrollEnd={event => {
-            const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-            if (categoriesData[index].name !== selectedCategory) {
-              setSelectedCategory(categoriesData[index].name);
-              flatListRef.current?.scrollToIndex({ index, animated: true });
+          onScrollBeginDrag={event => {
+            const offsetX = event.nativeEvent.contentOffset.x;
+            const index = Math.round(offsetX / screenWidth);
+            const nextIndex = Math.min(categoriesData.length - 1, index + 1); // Hedef indeks
+            const nextCategory = categoriesData[nextIndex].name;
+
+            if (!newsData[nextCategory] && !loading[nextCategory]) {
+              const category = categoriesData.find(c => c.name === nextCategory);
+              if (category) {
+                loadNews(category.id, nextCategory);
+              }
             }
           }}
-          onScrollToIndexFailed={info => {
-            newsListRef.current?.scrollToIndex({ index: info.index, animated: true });
+          onMomentumScrollEnd={event => {
+            const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+            setSelectedCategory(categoriesData[index].name);
+            flatListRef.current?.scrollToIndex({ index, animated: true });
           }}
           renderItem={({ item }) => (
             <View style={{ width: screenWidth }}>
@@ -136,11 +98,17 @@ export default function HomeScreen() {
                 <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
               ) : (
                 <FlatList
+                  windowSize={6}
+                  key="articles"
+                  removeClippedSubviews
+                  initialNumToRender={6}
+                  maxToRenderPerBatch={6}
                   data={newsData[item]}
                   keyExtractor={newsItem => newsItem.guid}
                   renderItem={renderNewsItem}
                   refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                   showsVerticalScrollIndicator={false}
+                  contentContainerStyle={styles.newsList}
                 />
               )}
             </View>
@@ -176,6 +144,9 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 5,
   },
+  newsList: {
+    backgroundColor: 'red',
+  },
   newsItem: {
     width: screenWidth,
     justifyContent: 'center',
@@ -185,7 +156,7 @@ const styles = StyleSheet.create({
   newsText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#fff',
   },
   loader: {
     flex: 1,
