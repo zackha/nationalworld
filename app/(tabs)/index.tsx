@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { fetchNews, categoriesData } from '@/services/apiWp';
@@ -18,9 +18,13 @@ export default function HomeScreen() {
     async (categoryId: number, categoryName: string) => {
       if (!loading[categoryName]) {
         setLoading(prev => ({ ...prev, [categoryName]: true }));
+        console.log(`Fetching news for category: ${categoryName}`);
         try {
           const newsItems = await fetchNews(1, categoryId);
+          console.log(`Fetched ${newsItems.length} items for category: ${categoryName}`);
           setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
+        } catch (error) {
+          console.error(`Error fetching news for category: ${categoryName}`, error);
         } finally {
           setLoading(prev => ({ ...prev, [categoryName]: false }));
         }
@@ -45,40 +49,53 @@ export default function HomeScreen() {
     setRefreshing(false);
   }, [loadNews, selectedCategory]);
 
-  const handleScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
-    const offsetX = event.nativeEvent.contentOffset.x;
-    const currentIndex = Math.round(offsetX / screenWidth);
+  const handleScroll = useCallback(
+    (event: { nativeEvent: { contentOffset: { x: number } } }) => {
+      const offsetX = event.nativeEvent.contentOffset.x;
+      const currentIndex = Math.round(offsetX / screenWidth);
 
-    const adjacentIndexes = [Math.max(0, currentIndex - 1), Math.min(categoriesData.length - 1, currentIndex + 1)];
+      const adjacentIndexes = [Math.max(0, currentIndex - 1), Math.min(categoriesData.length - 1, currentIndex + 1)];
 
-    adjacentIndexes.forEach(index => {
-      const category = categoriesData[index];
-      if (!newsData[category.name]) {
-        loadNews(category.id, category.name);
-      }
-    });
-  };
+      adjacentIndexes.forEach(index => {
+        const category = categoriesData[index];
+        if (!newsData[category.name]) {
+          loadNews(category.id, category.name);
+        }
+      });
+    },
+    [loadNews, newsData]
+  );
 
-  const handleCategorySelect = (categoryName: string) => {
+  const handleCategorySelect = useCallback((categoryName: string) => {
     setSelectedCategory(categoryName);
     const index = categoriesData.findIndex(c => c.name === categoryName);
 
     if (index !== -1) {
       newsListRef.current?.scrollToIndex({ index, animated: true });
     }
-  };
+  }, []);
 
-  const renderCategoryItem = ({ item }: { item: string }) => (
-    <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.categoryButton}>
-      <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
-      {item === selectedCategory && <View style={styles.underline} />}
-    </TouchableOpacity>
+  const renderCategoryItem = useMemo(
+    () =>
+      ({ item }: { item: string }) =>
+        (
+          <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.categoryButton}>
+            <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
+            {item === selectedCategory && <View style={styles.underline} />}
+          </TouchableOpacity>
+        ),
+    [selectedCategory, handleCategorySelect]
   );
 
-  const renderNewsItem = ({ item }: { item: NewsItemWp }) => (
-    <View style={styles.newsItem}>
-      <Text style={styles.newsText}>{item.title}</Text>
-    </View>
+  const renderNewsItem = useMemo(
+    () =>
+      ({ item }: { item: NewsItemWp }) =>
+        (
+          <View style={styles.newsItem}>
+            <Text style={styles.newsText}>{item.title}</Text>
+          </View>
+        ),
+    []
   );
 
   return (
@@ -102,8 +119,10 @@ export default function HomeScreen() {
           onScroll={handleScroll}
           onMomentumScrollEnd={event => {
             const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-            setSelectedCategory(categoriesData[index].name);
-            flatListRef.current?.scrollToIndex({ index, animated: true });
+            if (categoriesData[index].name !== selectedCategory) {
+              setSelectedCategory(categoriesData[index].name);
+              flatListRef.current?.scrollToIndex({ index, animated: true });
+            }
           }}
           onScrollToIndexFailed={info => {
             newsListRef.current?.scrollToIndex({ index: info.index, animated: true });
