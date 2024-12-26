@@ -34,3 +34,11 @@ export interface WPPost {
 export interface Props {
   item: NewsItemWp;
 }
+
+export interface LoadingState {
+  [key: string]: boolean;
+}
+
+export interface NewsDataState {
+  [key: string]: NewsItemWp[];
+}

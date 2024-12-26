@@ -2,13 +2,13 @@ import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { fetchNews, categoriesData } from '@/services/apiWp';
-import type { NewsItemWp } from '@/types';
+import type { NewsItemWp, LoadingState, NewsDataState } from '@/types';
 
 const screenWidth = Dimensions.get('window').width;
 
 export default function HomeScreen() {
-  const [newsData, setNewsData] = useState<{ [key: string]: NewsItemWp[] }>({});
-  const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
+  const [newsData, setNewsData] = useState<NewsDataState>({});
+  const [loading, setLoading] = useState<LoadingState>({});
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
   const flatListRef = useRef<FlatList<string>>(null);
