@@ -89,6 +89,7 @@ export default function HomeScreen() {
               }
             }
           }}
+          getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
           onMomentumScrollEnd={event => {
             const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
             setSelectedCategory(categoriesData[index].name);
