@@ -38,7 +38,7 @@ export default function HomeScreen() {
     if (category && !newsData[selectedCategory]) {
       loadNews(category.id, selectedCategory);
     }
-  }, [selectedCategory, loadNews, newsData]);
+  }, [selectedCategory, newsData]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -66,14 +66,17 @@ export default function HomeScreen() {
     [loadNews, newsData]
   );
 
-  const handleCategorySelect = useCallback((categoryName: string) => {
-    setSelectedCategory(categoryName);
-    const index = categoriesData.findIndex(c => c.name === categoryName);
+  const handleCategorySelect = useCallback(
+    (categoryName: string) => {
+      setSelectedCategory(categoryName);
+      const index = categoriesData.findIndex(c => c.name === categoryName);
 
-    if (index !== -1) {
-      newsListRef.current?.scrollToIndex({ index, animated: true });
-    }
-  }, []);
+      if (index !== -1) {
+        newsListRef.current?.scrollToIndex({ index, animated: true });
+      }
+    },
+    [categoriesData]
+  );
 
   const renderCategoryItem = useMemo(
     () =>
