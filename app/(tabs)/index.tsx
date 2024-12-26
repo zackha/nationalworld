@@ -15,8 +15,10 @@ export default function HomeScreen() {
   const newsListRef = useRef<FlatList<string>>(null);
 
   const loadNews = useCallback(async (categoryId: number, categoryName: string) => {
+    console.log(`Fetching...... ${categoryName} (ID: ${categoryId})`);
     setLoading(prev => ({ ...prev, [categoryName]: true }));
     const newsItems = await fetchNews(1, categoryId);
+    console.log(`Fetched! ${categoryName}`);
     setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
     setLoading(prev => ({ ...prev, [categoryName]: false }));
   }, []);
@@ -77,7 +79,7 @@ export default function HomeScreen() {
           onScrollBeginDrag={event => {
             const offsetX = event.nativeEvent.contentOffset.x;
             const index = Math.round(offsetX / screenWidth);
-            const nextIndex = Math.min(categoriesData.length - 1, index + 1); // Hedef indeks
+            const nextIndex = Math.min(categoriesData.length - 1, index + 1);
             const nextCategory = categoriesData[nextIndex].name;
 
             if (!newsData[nextCategory] && !loading[nextCategory]) {
