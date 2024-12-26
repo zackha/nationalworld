@@ -49,8 +49,22 @@ export default function HomeScreen() {
   }, [loadNews, selectedCategory]);
 
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
     const index = categoriesData.findIndex(c => c.name === category);
+
+    setSelectedCategory(category);
+
+    const previousCategory = categoriesData[index - 1];
+    const nextCategory = categoriesData[index + 1];
+
+    const categoriesToLoad = [category, previousCategory?.name, nextCategory?.name].filter(Boolean);
+
+    categoriesToLoad.forEach(catName => {
+      const category = categoriesData.find(c => c.name === catName);
+      if (category && !newsData[catName]) {
+        loadNews(category.id, catName);
+      }
+    });
+
     newsListRef.current?.scrollToIndex({ index, animated: true });
   };
 
@@ -89,6 +103,44 @@ export default function HomeScreen() {
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
           getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
+          onScrollBeginDrag={event => {
+            const offsetX = event.nativeEvent.contentOffset.x;
+            const currentIndex = Math.round(offsetX / screenWidth);
+            const nextIndex = currentIndex + 1;
+            const previousIndex = currentIndex - 1;
+
+            // Sağa doğru kaydırma
+            if (nextIndex < categoriesData.length) {
+              const nextCategory = categoriesData[nextIndex];
+              const nextNextCategory = categoriesData[nextIndex + 1];
+
+              // Bir sonraki kategori ve onun komşusunu yükle
+              const categoriesToLoad = [nextCategory?.name, nextNextCategory?.name].filter(Boolean);
+
+              categoriesToLoad.forEach(catName => {
+                const category = categoriesData.find(c => c.name === catName);
+                if (category && !newsData[catName] && !loading[catName]) {
+                  loadNews(category.id, catName);
+                }
+              });
+            }
+
+            // Sola doğru kaydırma
+            if (previousIndex >= 0) {
+              const previousCategory = categoriesData[previousIndex];
+              const previousPreviousCategory = categoriesData[previousIndex - 1];
+
+              // Bir önceki kategori ve onun komşusunu yükle
+              const categoriesToLoad = [previousCategory?.name, previousPreviousCategory?.name].filter(Boolean);
+
+              categoriesToLoad.forEach(catName => {
+                const category = categoriesData.find(c => c.name === catName);
+                if (category && !newsData[catName] && !loading[catName]) {
+                  loadNews(category.id, catName);
+                }
+              });
+            }
+          }}
           onMomentumScrollEnd={event => {
             const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
             setSelectedCategory(categoriesData[index].name);
