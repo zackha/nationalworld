@@ -20,9 +20,30 @@ export const extractImageUrl = (description: string): string | null => {
   return match ? match[1] || match[0] : null;
 };
 
-export const fetchNews = async (page: number = 1): Promise<NewsItemWp[]> => {
+export const categoriesData = [
+  { id: 20, name: 'News' },
+  { id: 28, name: 'Business' },
+  { id: 7, name: 'Sport' },
+  { id: 33247, name: 'General Election 2024' },
+  { id: 33246, name: 'Business Crack' },
+  { id: 8458, name: 'Carlisle United' },
+  { id: 33235, name: 'Cumbria Cat' },
+  { id: 33230, name: 'Cumbria Food Awards' },
+  { id: 33231, name: 'Fell Foodie' },
+  { id: 2, name: 'Headlines' },
+  { id: 33229, name: 'HOLLR' },
+  { id: 14457, name: 'Jobs' },
+  { id: 33242, name: 'Review' },
+  { id: 33187, name: 'Sponsored' },
+  { id: 32790, name: 'Test' },
+  { id: 33236, name: "Walshie's Week" },
+  { id: 33248, name: 'Westminster words' },
+  { id: 51, name: "What's on" },
+];
+
+export const fetchNews = async (page: number = 1, categoryId: number = 20): Promise<NewsItemWp[]> => {
   return api
-    .url(`/wp-json/wp/v2/posts?order_by=date&per_page=20&page=${page}`)
+    .url(`/wp-json/wp/v2/posts?order_by=date&per_page=20&page=${page}&categories=${categoryId}`)
     .get()
     .json(result =>
       result.map((item: WPPost) => ({

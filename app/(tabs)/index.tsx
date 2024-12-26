@@ -1,53 +1,135 @@
-import { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, FlatList, RefreshControl } from 'react-native';
-
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl, Image } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
-import { NewsItemComponent } from '@/components/NewsItem';
+import { fetchNews, categoriesData } from '@/services/apiWp';
 import type { NewsItemWp } from '@/types';
-import { fetchNews } from '@/services/apiWp';
-import { Header } from '@/components/Header';
 
 export default function HomeScreen() {
   const [newsData, setNewsData] = useState<NewsItemWp[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
+  const flatListRef = useRef<FlatList<string>>(null);
+  const newsListRef = useRef<FlatList<string>>(null);
+  const screenWidth = Dimensions.get('window').width;
 
-  const loadNews = useCallback(async () => {
-    const newsItems = await fetchNews();
+  const loadNews = useCallback(async (categoryId: number) => {
+    const newsItems = await fetchNews(1, categoryId);
     setNewsData(newsItems);
   }, []);
 
   useEffect(() => {
-    loadNews();
-  }, [loadNews]);
+    const category = categoriesData.find(c => c.name === selectedCategory);
+    if (category) {
+      loadNews(category.id);
+    }
+  }, [selectedCategory, loadNews]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await loadNews();
+    const category = categoriesData.find(c => c.name === selectedCategory);
+    if (category) {
+      await loadNews(category.id);
+    }
     setRefreshing(false);
-  }, [loadNews]);
+  }, [loadNews, selectedCategory]);
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+    const index = categoriesData.findIndex(c => c.name === category);
+    newsListRef.current?.scrollToIndex({ index, animated: true });
+  };
+
+  const renderCategoryItem = ({ item }: { item: string }) => (
+    <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.categoryButton}>
+      <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
+      {item === selectedCategory && <View style={styles.underline} />}
+    </TouchableOpacity>
+  );
+
+  const renderNewsItem = ({ item }: { item: NewsItemWp }) => (
+    <View style={styles.newsItem}>
+      <Image source={{ uri: item.image }} style={{ width: 100, height: 100 }} />
+      <Text style={styles.newsText}>{item.title}</Text>
+    </View>
+  );
 
   return (
     <ThemedView>
-      <Header />
-      <FlatList
-        windowSize={6}
-        key="blogHome"
-        removeClippedSubviews
-        initialNumToRender={6}
-        maxToRenderPerBatch={6}
-        data={newsData}
-        renderItem={({ item, index }) => <NewsItemComponent item={item} index={index} />}
-        keyExtractor={item => item.guid}
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        contentContainerStyle={styles.newsList}
-      />
+      <View style={styles.container}>
+        <View style={styles.categoriesContainer}>
+          <FlatList
+            ref={flatListRef}
+            data={categoriesData.map(c => c.name)}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={item => item}
+            renderItem={renderCategoryItem}
+          />
+        </View>
+        <FlatList
+          ref={newsListRef}
+          data={categoriesData.map(c => c.name)}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item}
+          onMomentumScrollEnd={event => {
+            const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+            setSelectedCategory(categoriesData[index].name);
+            flatListRef.current?.scrollToIndex({ index, animated: true });
+          }}
+          renderItem={({ item }) => (
+            <FlatList
+              data={newsData}
+              keyExtractor={item => item.guid}
+              renderItem={renderNewsItem}
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+              onEndReachedThreshold={0.5}
+            />
+          )}
+        />
+      </View>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  newsList: {
-    // backgroundColor: 'red',
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    paddingTop: 50,
+  },
+  categoriesContainer: {
+    paddingHorizontal: 10,
+  },
+  categoryButton: {
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoryText: {
+    fontSize: 16,
+    color: '#555',
+  },
+  selectedCategoryText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  underline: {
+    height: 2,
+    backgroundColor: '#000',
+    width: '100%',
+    marginTop: 5,
+  },
+  newsItem: {
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  newsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });
