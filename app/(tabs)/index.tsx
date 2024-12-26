@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { fetchNews, categoriesData } from '@/services/apiWp';
@@ -64,11 +64,14 @@ export default function HomeScreen() {
     newsListRef.current?.scrollToIndex({ index, animated: true });
   };
 
-  const renderCategoryItem = ({ item }: { item: string }) => (
-    <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.categoryButton}>
-      <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
-      {item === selectedCategory && <View style={styles.underline} />}
-    </TouchableOpacity>
+  const renderCategoryItem = useCallback(
+    ({ item }: { item: string }) => (
+      <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.categoryButton}>
+        <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
+        {item === selectedCategory && <View style={styles.underline} />}
+      </TouchableOpacity>
+    ),
+    [selectedCategory]
   );
 
   const renderNewsItem = useCallback(
@@ -80,20 +83,15 @@ export default function HomeScreen() {
     []
   );
 
+  const memoizedCategories = useMemo(() => categoriesData.map(c => c.name), []);
+
   return (
     <ThemedView>
       <View style={styles.container}>
-        <FlatList
-          ref={flatListRef}
-          data={categoriesData.map(c => c.name)}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={item => item}
-          renderItem={renderCategoryItem}
-        />
+        <FlatList ref={flatListRef} data={memoizedCategories} horizontal showsHorizontalScrollIndicator={false} keyExtractor={item => item} renderItem={renderCategoryItem} />
         <FlatList
           ref={newsListRef}
-          data={categoriesData.map(c => c.name)}
+          data={memoizedCategories}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
