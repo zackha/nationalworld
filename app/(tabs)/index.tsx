@@ -16,17 +16,18 @@ export default function HomeScreen() {
 
   const loadNews = useCallback(
     async (categoryId: number, categoryName: string) => {
-      if (loading[categoryName] || newsData[categoryName]) return;
-      console.log(`\x1b[33mFetching...... ${categoryName} (ID: ${categoryId})\x1b[0m`);
-      setLoading(prev => ({ ...prev, [categoryName]: true }));
-      try {
-        const newsItems = await fetchNews(1, categoryId);
-        console.log(`\x1b[32mFetched! ${categoryName}\x1b[0m`);
-        setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
-      } catch (error) {
-        console.error(`Error fetching news for ${categoryName}:`, error);
-      } finally {
-        setLoading(prev => ({ ...prev, [categoryName]: false }));
+      if (!loading[categoryName]) {
+        console.log(`\x1b[33mFetching...... ${categoryName} (ID: ${categoryId})\x1b[0m`);
+        setLoading(prev => ({ ...prev, [categoryName]: true }));
+        try {
+          const newsItems = await fetchNews(1, categoryId);
+          console.log(`\x1b[32mFetched! ${categoryName}\x1b[0m`);
+          setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
+        } catch (error) {
+          console.error(`Error fetching news for ${categoryName}:`, error);
+        } finally {
+          setLoading(prev => ({ ...prev, [categoryName]: false }));
+        }
       }
     },
     [loading, newsData]
