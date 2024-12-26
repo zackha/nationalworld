@@ -30,7 +30,7 @@ export default function HomeScreen() {
         }
       }
     },
-    [loading, newsData]
+    [loading]
   );
 
   useEffect(() => {
@@ -50,14 +50,9 @@ export default function HomeScreen() {
   }, [loadNews, selectedCategory]);
 
   const handleCategorySelect = (category: string) => {
-    const index = categoriesData.findIndex(c => c.name === category);
-
     setSelectedCategory(category);
-
-    const previousCategory = categoriesData[index - 1];
-    const nextCategory = categoriesData[index + 1];
-
-    const categoriesToLoad = [category, previousCategory?.name, nextCategory?.name].filter(Boolean);
+    const index = categoriesData.findIndex(c => c.name === category);
+    const categoriesToLoad = [category, categoriesData[index - 1]?.name, categoriesData[index + 1]?.name].filter(Boolean);
 
     categoriesToLoad.forEach(catName => {
       const category = categoriesData.find(c => c.name === catName);
@@ -110,33 +105,19 @@ export default function HomeScreen() {
             const nextIndex = currentIndex + 1;
             const previousIndex = currentIndex - 1;
 
-            if (nextIndex < categoriesData.length) {
-              const nextCategory = categoriesData[nextIndex];
-              const nextNextCategory = categoriesData[nextIndex + 1];
+            const categoriesToLoad = [
+              categoriesData[nextIndex]?.name,
+              categoriesData[nextIndex + 1]?.name,
+              categoriesData[previousIndex]?.name,
+              categoriesData[previousIndex - 1]?.name,
+            ].filter(Boolean);
 
-              const categoriesToLoad = [nextCategory?.name, nextNextCategory?.name].filter(Boolean);
-
-              categoriesToLoad.forEach(catName => {
-                const category = categoriesData.find(c => c.name === catName);
-                if (category && !newsData[catName]) {
-                  loadNews(category.id, catName);
-                }
-              });
-            }
-
-            if (previousIndex >= 0) {
-              const previousCategory = categoriesData[previousIndex];
-              const previousPreviousCategory = categoriesData[previousIndex - 1];
-
-              const categoriesToLoad = [previousCategory?.name, previousPreviousCategory?.name].filter(Boolean);
-
-              categoriesToLoad.forEach(catName => {
-                const category = categoriesData.find(c => c.name === catName);
-                if (category && !newsData[catName]) {
-                  loadNews(category.id, catName);
-                }
-              });
-            }
+            categoriesToLoad.forEach(catName => {
+              const category = categoriesData.find(c => c.name === catName);
+              if (category && !newsData[catName]) {
+                loadNews(category.id, catName);
+              }
+            });
           }}
           onMomentumScrollEnd={event => {
             const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
