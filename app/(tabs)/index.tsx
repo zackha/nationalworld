@@ -66,6 +66,9 @@ export default function HomeScreen() {
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
           renderItem={renderCategoryItem}
+          onScrollToIndexFailed={info => {
+            flatListRef.current?.scrollToIndex({ index: info.index });
+          }}
         />
         <FlatList
           ref={newsListRef}
