@@ -12,14 +12,21 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
   const flatListRef = useRef<FlatList<string>>(null);
-  const newsListRef = useRef<FlatList<string>>(null);
 
-  const loadNews = useCallback(async (categoryId: number, categoryName: string) => {
-    setLoading(prev => ({ ...prev, [categoryName]: true }));
-    const newsItems = await fetchNews(1, categoryId);
-    setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
-    setLoading(prev => ({ ...prev, [categoryName]: false }));
-  }, []);
+  const loadNews = useCallback(
+    async (categoryId: number, categoryName: string) => {
+      if (!loading[categoryName]) {
+        setLoading(prev => ({ ...prev, [categoryName]: true }));
+        try {
+          const newsItems = await fetchNews(1, categoryId);
+          setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
+        } finally {
+          setLoading(prev => ({ ...prev, [categoryName]: false }));
+        }
+      }
+    },
+    [loading]
+  );
 
   useEffect(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
@@ -37,14 +44,25 @@ export default function HomeScreen() {
     setRefreshing(false);
   }, [loadNews, selectedCategory]);
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
-    const index = categoriesData.findIndex(c => c.name === category);
-    newsListRef.current?.scrollToIndex({ index, animated: true });
+  const handleScroll = event => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const currentIndex = Math.round(offsetX / screenWidth);
+
+    const adjacentIndexes = [
+      Math.max(0, currentIndex - 1), // Solundaki kategori
+      Math.min(categoriesData.length - 1, currentIndex + 1), // Sağındaki kategori
+    ];
+
+    adjacentIndexes.forEach(index => {
+      const category = categoriesData[index];
+      if (!newsData[category.name]) {
+        loadNews(category.id, category.name);
+      }
+    });
   };
 
   const renderCategoryItem = ({ item }: { item: string }) => (
-    <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.categoryButton}>
+    <TouchableOpacity onPress={() => setSelectedCategory(item)} style={styles.categoryButton}>
       <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
       {item === selectedCategory && <View style={styles.underline} />}
     </TouchableOpacity>
@@ -66,42 +84,14 @@ export default function HomeScreen() {
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
           renderItem={renderCategoryItem}
-          onScrollToIndexFailed={info => {
-            flatListRef.current?.scrollToIndex({ index: info.index });
-          }}
         />
         <FlatList
-          ref={newsListRef}
           data={categoriesData.map(c => c.name)}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
-          onScrollBeginDrag={event => {
-            const offsetX = event.nativeEvent.contentOffset.x;
-            const currentIndex = Math.round(offsetX / screenWidth);
-            const nextIndex = Math.min(categoriesData.length - 1, currentIndex + 1); // Sağa kaydırma hedefi
-            const prevIndex = Math.max(0, currentIndex - 1); // Sola kaydırma hedefi
-
-            const nextCategory = categoriesData[nextIndex].name;
-            const prevCategory = categoriesData[prevIndex].name;
-
-            // Sağa kaydırma için veriyi yükle
-            if (!newsData[nextCategory] && !loading[nextCategory]) {
-              const category = categoriesData.find(c => c.name === nextCategory);
-              if (category) {
-                loadNews(category.id, nextCategory);
-              }
-            }
-
-            // Sola kaydırma için veriyi yükle
-            if (!newsData[prevCategory] && !loading[prevCategory]) {
-              const category = categoriesData.find(c => c.name === prevCategory);
-              if (category) {
-                loadNews(category.id, prevCategory);
-              }
-            }
-          }}
+          onScroll={handleScroll}
           onMomentumScrollEnd={event => {
             const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
             setSelectedCategory(categoriesData[index].name);
@@ -113,17 +103,11 @@ export default function HomeScreen() {
                 <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
               ) : (
                 <FlatList
-                  windowSize={6}
-                  key="articles"
-                  removeClippedSubviews
-                  initialNumToRender={6}
-                  maxToRenderPerBatch={6}
                   data={newsData[item]}
                   keyExtractor={newsItem => newsItem.guid}
                   renderItem={renderNewsItem}
                   refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                   showsVerticalScrollIndicator={false}
-                  contentContainerStyle={styles.newsList}
                 />
               )}
             </View>
@@ -159,9 +143,6 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 5,
   },
-  newsList: {
-    backgroundColor: 'red',
-  },
   newsItem: {
     width: screenWidth,
     justifyContent: 'center',
@@ -171,7 +152,7 @@ const styles = StyleSheet.create({
   newsText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#000',
   },
   loader: {
     flex: 1,
