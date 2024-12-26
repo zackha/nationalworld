@@ -1,8 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { fetchNews, categoriesData } from '@/services/apiWp';
 import type { NewsItemWp } from '@/types';
+
+const screenWidth = Dimensions.get('window').width;
 
 export default function HomeScreen() {
   const [newsData, setNewsData] = useState<NewsItemWp[]>([]);
@@ -10,7 +12,6 @@ export default function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
   const flatListRef = useRef<FlatList<string>>(null);
   const newsListRef = useRef<FlatList<string>>(null);
-  const screenWidth = Dimensions.get('window').width;
 
   const loadNews = useCallback(async (categoryId: number) => {
     const newsItems = await fetchNews(1, categoryId);
@@ -48,7 +49,6 @@ export default function HomeScreen() {
 
   const renderNewsItem = ({ item }: { item: NewsItemWp }) => (
     <View style={styles.newsItem}>
-      <Image source={{ uri: item.image }} style={{ width: 100, height: 100 }} />
       <Text style={styles.newsText}>{item.title}</Text>
     </View>
   );
@@ -56,16 +56,14 @@ export default function HomeScreen() {
   return (
     <ThemedView>
       <View style={styles.container}>
-        <View style={styles.categoriesContainer}>
-          <FlatList
-            ref={flatListRef}
-            data={categoriesData.map(c => c.name)}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item}
-            renderItem={renderCategoryItem}
-          />
-        </View>
+        <FlatList
+          ref={flatListRef}
+          data={categoriesData.map(c => c.name)}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item}
+          renderItem={renderCategoryItem}
+        />
         <FlatList
           ref={newsListRef}
           data={categoriesData.map(c => c.name)}
@@ -78,13 +76,19 @@ export default function HomeScreen() {
             setSelectedCategory(categoriesData[index].name);
             flatListRef.current?.scrollToIndex({ index, animated: true });
           }}
-          renderItem={({ item }) => (
+          renderItem={() => (
             <FlatList
+              windowSize={6}
+              key="articles"
+              removeClippedSubviews
+              initialNumToRender={6}
+              maxToRenderPerBatch={6}
               data={newsData}
               keyExtractor={item => item.guid}
               renderItem={renderNewsItem}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-              onEndReachedThreshold={0.5}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.newsList}
             />
           )}
         />
@@ -98,9 +102,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
     paddingTop: 50,
-  },
-  categoriesContainer: {
-    paddingHorizontal: 10,
   },
   categoryButton: {
     paddingHorizontal: 20,
@@ -121,8 +122,11 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 5,
   },
+  newsList: {
+    backgroundColor: 'red',
+  },
   newsItem: {
-    width: Dimensions.get('window').width,
+    width: screenWidth,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -130,6 +134,6 @@ const styles = StyleSheet.create({
   newsText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#fff',
   },
 });
