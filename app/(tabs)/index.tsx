@@ -79,14 +79,26 @@ export default function HomeScreen() {
           keyExtractor={item => item}
           onScrollBeginDrag={event => {
             const offsetX = event.nativeEvent.contentOffset.x;
-            const index = Math.round(offsetX / screenWidth);
-            const nextIndex = Math.min(categoriesData.length - 1, index + 1); // Hedef indeks
-            const nextCategory = categoriesData[nextIndex].name;
+            const currentIndex = Math.round(offsetX / screenWidth);
+            const nextIndex = Math.min(categoriesData.length - 1, currentIndex + 1); // Sağa kaydırma hedefi
+            const prevIndex = Math.max(0, currentIndex - 1); // Sola kaydırma hedefi
 
+            const nextCategory = categoriesData[nextIndex].name;
+            const prevCategory = categoriesData[prevIndex].name;
+
+            // Sağa kaydırma için veriyi yükle
             if (!newsData[nextCategory] && !loading[nextCategory]) {
               const category = categoriesData.find(c => c.name === nextCategory);
               if (category) {
                 loadNews(category.id, nextCategory);
+              }
+            }
+
+            // Sola kaydırma için veriyi yükle
+            if (!newsData[prevCategory] && !loading[prevCategory]) {
+              const category = categoriesData.find(c => c.name === prevCategory);
+              if (category) {
+                loadNews(category.id, prevCategory);
               }
             }
           }}
