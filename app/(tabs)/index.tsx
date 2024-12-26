@@ -12,6 +12,7 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
   const flatListRef = useRef<FlatList<string>>(null);
+  const newsListRef = useRef<FlatList<string>>(null);
 
   const loadNews = useCallback(
     async (categoryId: number, categoryName: string) => {
@@ -44,14 +45,11 @@ export default function HomeScreen() {
     setRefreshing(false);
   }, [loadNews, selectedCategory]);
 
-  const handleScroll = event => {
+  const handleScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(offsetX / screenWidth);
 
-    const adjacentIndexes = [
-      Math.max(0, currentIndex - 1), // Solundaki kategori
-      Math.min(categoriesData.length - 1, currentIndex + 1), // Sağındaki kategori
-    ];
+    const adjacentIndexes = [Math.max(0, currentIndex - 1), Math.min(categoriesData.length - 1, currentIndex + 1)];
 
     adjacentIndexes.forEach(index => {
       const category = categoriesData[index];
@@ -61,8 +59,17 @@ export default function HomeScreen() {
     });
   };
 
+  const handleCategorySelect = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+    const index = categoriesData.findIndex(c => c.name === categoryName);
+
+    if (index !== -1) {
+      newsListRef.current?.scrollToIndex({ index, animated: true });
+    }
+  };
+
   const renderCategoryItem = ({ item }: { item: string }) => (
-    <TouchableOpacity onPress={() => setSelectedCategory(item)} style={styles.categoryButton}>
+    <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.categoryButton}>
       <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
       {item === selectedCategory && <View style={styles.underline} />}
     </TouchableOpacity>
@@ -86,6 +93,7 @@ export default function HomeScreen() {
           renderItem={renderCategoryItem}
         />
         <FlatList
+          ref={newsListRef}
           data={categoriesData.map(c => c.name)}
           horizontal
           pagingEnabled
@@ -96,6 +104,9 @@ export default function HomeScreen() {
             const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
             setSelectedCategory(categoriesData[index].name);
             flatListRef.current?.scrollToIndex({ index, animated: true });
+          }}
+          onScrollToIndexFailed={info => {
+            newsListRef.current?.scrollToIndex({ index: info.index, animated: true });
           }}
           renderItem={({ item }) => (
             <View style={{ width: screenWidth }}>
