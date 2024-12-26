@@ -110,33 +110,29 @@ export default function HomeScreen() {
             const nextIndex = currentIndex + 1;
             const previousIndex = currentIndex - 1;
 
-            // Sağa doğru kaydırma
             if (nextIndex < categoriesData.length) {
               const nextCategory = categoriesData[nextIndex];
               const nextNextCategory = categoriesData[nextIndex + 1];
 
-              // Bir sonraki kategori ve onun komşusunu yükle
               const categoriesToLoad = [nextCategory?.name, nextNextCategory?.name].filter(Boolean);
 
               categoriesToLoad.forEach(catName => {
                 const category = categoriesData.find(c => c.name === catName);
-                if (category && !newsData[catName] && !loading[catName]) {
+                if (category && !newsData[catName]) {
                   loadNews(category.id, catName);
                 }
               });
             }
 
-            // Sola doğru kaydırma
             if (previousIndex >= 0) {
               const previousCategory = categoriesData[previousIndex];
               const previousPreviousCategory = categoriesData[previousIndex - 1];
 
-              // Bir önceki kategori ve onun komşusunu yükle
               const categoriesToLoad = [previousCategory?.name, previousPreviousCategory?.name].filter(Boolean);
 
               categoriesToLoad.forEach(catName => {
                 const category = categoriesData.find(c => c.name === catName);
-                if (category && !newsData[catName] && !loading[catName]) {
+                if (category && !newsData[catName]) {
                   loadNews(category.id, catName);
                 }
               });
@@ -149,7 +145,7 @@ export default function HomeScreen() {
           }}
           renderItem={({ item }) => (
             <View style={{ width: screenWidth }}>
-              {loading[item] ? (
+              {loading[item] && !refreshing ? (
                 <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
               ) : (
                 <FlatList
