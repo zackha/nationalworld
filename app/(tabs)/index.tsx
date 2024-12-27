@@ -11,18 +11,25 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState<LoadingState>({});
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
+  const [page, setPage] = useState<{ [key: string]: number }>({});
+  const [hasMore, setHasMore] = useState<{ [key: string]: boolean }>({});
   const flatListRef = useRef<FlatList<string>>(null);
   const newsListRef = useRef<FlatList<string>>(null);
 
   const loadNews = useCallback(
-    async (categoryId: number, categoryName: string) => {
+    async (categoryId: number, categoryName: string, pageNumber: number = 1) => {
       if (!loading[categoryName]) {
         console.log(`\x1b[33mFetching...... ${categoryName} (ID: ${categoryId})\x1b[0m`);
         setLoading(prev => ({ ...prev, [categoryName]: true }));
         try {
-          const newsItems = await fetchNews(1, categoryId);
+          const newsItems = await fetchNews(pageNumber, categoryId);
           console.log(`\x1b[32mFetched! ${categoryName}\x1b[0m`);
-          setNewsData(prev => ({ ...prev, [categoryName]: newsItems }));
+          setNewsData(prev => ({
+            ...prev,
+            [categoryName]: pageNumber === 1 ? newsItems : [...(prev[categoryName] || []), ...newsItems],
+          }));
+          setHasMore(prev => ({ ...prev, [categoryName]: newsItems.length > 0 }));
+          setPage(prev => ({ ...prev, [categoryName]: pageNumber }));
         } catch (error) {
           console.error(`Error fetching news for ${categoryName}:`, error);
         } finally {
@@ -83,6 +90,13 @@ export default function HomeScreen() {
     []
   );
 
+  const loadMoreNews = useCallback(() => {
+    const category = categoriesData.find(c => c.name === selectedCategory);
+    if (category && hasMore[selectedCategory] && !loading[selectedCategory]) {
+      loadNews(category.id, selectedCategory, (page[selectedCategory] || 1) + 1);
+    }
+  }, [selectedCategory, hasMore, loading, page, loadNews]);
+
   const memoizedCategories = useMemo(() => categoriesData.map(c => c.name), []);
 
   return (
@@ -124,7 +138,7 @@ export default function HomeScreen() {
           }}
           renderItem={({ item }) => (
             <View style={{ width: screenWidth }}>
-              {loading[item] && !refreshing ? (
+              {loading[item] && !refreshing && !hasMore[item] ? (
                 <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
               ) : (
                 <FlatList
@@ -139,6 +153,9 @@ export default function HomeScreen() {
                   refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={styles.newsList}
+                  onEndReached={loadMoreNews}
+                  onEndReachedThreshold={0.5}
+                  ListFooterComponent={loading[item] && hasMore[item] ? <ActivityIndicator size="small" color="#0000ff" /> : null}
                 />
               )}
             </View>
