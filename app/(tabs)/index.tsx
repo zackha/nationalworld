@@ -157,7 +157,7 @@ export default function HomeScreen() {
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={styles.newsList}
                   onEndReached={loadMoreNews}
-                  onEndReachedThreshold={0.5}
+                  onEndReachedThreshold={1}
                   ListFooterComponent={loading[item] && hasMore[item] ? <ActivityIndicator size="small" color="#0000ff" /> : null}
                 />
               )}
