@@ -1,11 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { fetchNews, categoriesData } from '@/services/apiWp';
 import type { NewsItemWp, LoadingState, NewsDataState } from '@/types';
 import styles from '@/styles/styles';
-
-const screenWidth = Dimensions.get('window').width;
+import { getScreenWidth } from '@/utils/dimensions';
 
 export default function HomeScreen() {
   const [newsData, setNewsData] = useState<NewsDataState>({});
@@ -114,10 +113,10 @@ export default function HomeScreen() {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
-          getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
+          getItemLayout={(data, index) => ({ length: getScreenWidth(), offset: getScreenWidth() * index, index })}
           onScrollBeginDrag={event => {
             const offsetX = event.nativeEvent.contentOffset.x;
-            const currentIndex = Math.round(offsetX / screenWidth);
+            const currentIndex = Math.round(offsetX / getScreenWidth());
             const nextIndex = currentIndex + 1;
             const previousIndex = currentIndex - 1;
 
@@ -136,12 +135,12 @@ export default function HomeScreen() {
             });
           }}
           onMomentumScrollEnd={event => {
-            const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+            const index = Math.round(event.nativeEvent.contentOffset.x / getScreenWidth());
             setSelectedCategory(categoriesData[index].name);
             flatListRef.current?.scrollToIndex({ index, animated: true });
           }}
           renderItem={({ item }) => (
-            <View style={{ width: screenWidth }}>
+            <View style={{ width: getScreenWidth() }}>
               {loading[item] && !refreshing && !hasMore[item] ? (
                 <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
               ) : (
