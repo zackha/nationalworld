@@ -1,47 +1,19 @@
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
-import { fetchNews, categoriesData } from '@/services/apiWp';
-import type { NewsItemWp, LoadingState, NewsDataState } from '@/types';
+import { categoriesData } from '@/services/apiWp';
+import type { NewsItemWp } from '@/types';
 import styles from '@/styles/styles';
-import { getScreenWidth } from '@/utils/dimensions';
+import screenWidth from '@/utils/dimensions';
+import useLoadNews from '@/hooks/useLoadNews';
 
 export default function HomeScreen() {
-  const [newsData, setNewsData] = useState<NewsDataState>({});
-  const [loading, setLoading] = useState<LoadingState>({});
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
-  const [page, setPage] = useState<{ [key: string]: number }>({});
-  const [hasMore, setHasMore] = useState<{ [key: string]: boolean }>({});
   const flatListRef = useRef<FlatList<string>>(null);
   const newsListRef = useRef<FlatList<string>>(null);
 
-  const loadNews = useCallback(
-    async (categoryId: number, categoryName: string, pageNumber: number = 1) => {
-      if (!loading[categoryName]) {
-        console.log(`\x1b[33mFetching...... ${categoryName} (ID: ${categoryId})\x1b[0m`);
-        setLoading(prev => ({ ...prev, [categoryName]: true }));
-        try {
-          const newsItems = await fetchNews(pageNumber, categoryId);
-          console.log(`\x1b[32mFetched! ${categoryName}\x1b[0m`);
-          setNewsData(prev => ({
-            ...prev,
-            [categoryName]: pageNumber === 1 ? newsItems : [...(prev[categoryName] || []), ...newsItems],
-          }));
-          setHasMore(prev => ({ ...prev, [categoryName]: newsItems.length > 0 }));
-          setPage(prev => ({ ...prev, [categoryName]: pageNumber }));
-        } catch (error) {
-          if (error instanceof Error && error.message.includes('rest_post_invalid_page_number')) {
-            setHasMore(prev => ({ ...prev, [categoryName]: false }));
-          }
-          console.error(`Error fetching news for ${categoryName}:`, error);
-        } finally {
-          setLoading(prev => ({ ...prev, [categoryName]: false }));
-        }
-      }
-    },
-    [loading]
-  );
+  const { newsData, loading, hasMore, loadNews, page } = useLoadNews();
 
   useEffect(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
@@ -113,10 +85,10 @@ export default function HomeScreen() {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
-          getItemLayout={(data, index) => ({ length: getScreenWidth(), offset: getScreenWidth() * index, index })}
+          getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
           onScrollBeginDrag={event => {
             const offsetX = event.nativeEvent.contentOffset.x;
-            const currentIndex = Math.round(offsetX / getScreenWidth());
+            const currentIndex = Math.round(offsetX / screenWidth);
             const nextIndex = currentIndex + 1;
             const previousIndex = currentIndex - 1;
 
@@ -135,12 +107,12 @@ export default function HomeScreen() {
             });
           }}
           onMomentumScrollEnd={event => {
-            const index = Math.round(event.nativeEvent.contentOffset.x / getScreenWidth());
+            const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
             setSelectedCategory(categoriesData[index].name);
             flatListRef.current?.scrollToIndex({ index, animated: true });
           }}
           renderItem={({ item }) => (
-            <View style={{ width: getScreenWidth() }}>
+            <View style={{ width: screenWidth }}>
               {loading[item] && !refreshing && !hasMore[item] ? (
                 <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
               ) : (

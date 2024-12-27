@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { getScreenWidth } from '@/utils/dimensions';
+import screenWidth from '@/utils/dimensions';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
   newsItem: {
-    width: getScreenWidth(),
+    width: screenWidth,
     padding: 20,
   },
   newsText: {
