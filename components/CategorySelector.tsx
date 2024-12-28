@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
-import { FlatList, TouchableOpacity, Text, View } from 'react-native';
-import styles from '@/styles/styles';
+import { FlatList, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 
 interface CategorySelectorProps {
   categories: string[];
@@ -24,3 +23,16 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ categories, selecte
 };
 
 export default CategorySelector;
+
+const styles = StyleSheet.create({
+  categoryText: {
+    fontSize: 16,
+    color: '#fff',
+    fontFamily: 'BBCReithSansMd',
+  },
+  selectedCategoryText: {
+    fontFamily: 'BBCReithSansBd',
+    color: '#eb342e',
+  },
+  underline: {},
+});

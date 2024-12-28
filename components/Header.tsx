@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   categoryList: {
-    // backgroundColor: 'green',
+    backgroundColor: 'green',
     paddingVertical: 16,
     paddingHorizontal: 20,
     width: '100%',
