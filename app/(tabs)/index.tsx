@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { categoriesData } from '@/services/apiWp';
@@ -10,8 +10,9 @@ import useScrollHandlers from '@/hooks/useScrollHandlers';
 import NewsList from '@/components/NewsList';
 
 export default function HomeScreen() {
-  const { newsData, loading, hasMore, loadNews, page } = useLoadNews();
-  const { selectedCategory, handleCategorySelect, newsListRef, memoizedCategories, setSelectedCategory } = useCategorySelection(newsData, loadNews);
+  const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
+  const { newsData, loading, hasMore, loadNews, loadMoreNews } = useLoadNews(selectedCategory);
+  const { handleCategorySelect, newsListRef, memoizedCategories } = useCategorySelection(newsData, loadNews, setSelectedCategory);
   const { refreshing, onRefresh } = useRefreshNews(selectedCategory, loadNews);
   const { onScrollBeginDrag, onMomentumScrollEnd, flatListRef } = useScrollHandlers(newsData, loadNews, setSelectedCategory);
 
@@ -31,13 +32,6 @@ export default function HomeScreen() {
     ),
     [selectedCategory]
   );
-
-  const loadMoreNews = useCallback(() => {
-    const category = categoriesData.find(c => c.name === selectedCategory);
-    if (category && hasMore[selectedCategory] && !loading[selectedCategory]) {
-      loadNews(category.id, selectedCategory, (page[selectedCategory] || 1) + 1);
-    }
-  }, [selectedCategory, hasMore, loading, page, loadNews]);
 
   return (
     <ThemedView>

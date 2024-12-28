@@ -3,8 +3,7 @@ import { categoriesData } from '@/services/apiWp';
 import { FlatList } from 'react-native';
 import type { NewsDataState } from '@/types';
 
-const useCategorySelection = (newsData: NewsDataState, loadNews: (categoryId: number, categoryName: string) => Promise<void>) => {
-  const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
+const useCategorySelection = (newsData: NewsDataState, loadNews: (categoryId: number, categoryName: string) => Promise<void>, setSelectedCategory: Function) => {
   const newsListRef = useRef<FlatList<string>>(null);
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
@@ -23,7 +22,7 @@ const useCategorySelection = (newsData: NewsDataState, loadNews: (categoryId: nu
 
   const memoizedCategories = useMemo(() => categoriesData.map(c => c.name), []);
 
-  return { selectedCategory, handleCategorySelect, newsListRef, memoizedCategories, setSelectedCategory };
+  return { handleCategorySelect, newsListRef, memoizedCategories };
 };
 
 export default useCategorySelection;

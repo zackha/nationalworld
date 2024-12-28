@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
 import { fetchNews } from '@/services/apiWp';
 import type { NewsDataState, LoadingState } from '@/types';
+import { categoriesData } from '@/services/apiWp';
 
-const useLoadNews = () => {
+const useLoadNews = (selectedCategory: string) => {
   const [newsData, setNewsData] = useState<NewsDataState>({});
   const [loading, setLoading] = useState<LoadingState>({});
   const [page, setPage] = useState<{ [key: string]: number }>({});
@@ -35,7 +36,14 @@ const useLoadNews = () => {
     [loading]
   );
 
-  return { newsData, loading, hasMore, loadNews, page };
+  const loadMoreNews = useCallback(() => {
+    const category = categoriesData.find(c => c.name === selectedCategory);
+    if (category && hasMore[selectedCategory] && !loading[selectedCategory]) {
+      loadNews(category.id, selectedCategory, (page[selectedCategory] || 1) + 1);
+    }
+  }, [selectedCategory, hasMore, loading, page, loadNews]);
+
+  return { newsData, loading, hasMore, loadNews, page, loadMoreNews };
 };
 
 export default useLoadNews;
