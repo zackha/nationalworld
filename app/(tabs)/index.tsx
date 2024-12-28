@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { categoriesData } from '@/services/apiWp';
@@ -6,14 +6,15 @@ import type { NewsItemWp } from '@/types';
 import styles from '@/styles/styles';
 import screenWidth from '@/utils/dimensions';
 import useLoadNews from '@/hooks/useLoadNews';
+import useCategorySelection from '@/hooks/useCategorySelection';
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
   const flatListRef = useRef<FlatList<string>>(null);
-  const newsListRef = useRef<FlatList<string>>(null);
 
   const { newsData, loading, hasMore, loadNews, page } = useLoadNews();
+
+  const { selectedCategory, handleCategorySelect, newsListRef, memoizedCategories, setSelectedCategory } = useCategorySelection(newsData, loadNews);
 
   useEffect(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
@@ -30,21 +31,6 @@ export default function HomeScreen() {
     }
     setRefreshing(false);
   }, [loadNews, selectedCategory]);
-
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
-    const index = categoriesData.findIndex(c => c.name === category);
-    const categoriesToLoad = [category, categoriesData[index - 1]?.name, categoriesData[index + 1]?.name].filter(Boolean);
-
-    categoriesToLoad.forEach(catName => {
-      const category = categoriesData.find(c => c.name === catName);
-      if (category && !newsData[catName]) {
-        loadNews(category.id, catName);
-      }
-    });
-
-    newsListRef.current?.scrollToIndex({ index, animated: true });
-  };
 
   const renderCategoryItem = useCallback(
     ({ item }: { item: string }) => (
@@ -71,8 +57,6 @@ export default function HomeScreen() {
       loadNews(category.id, selectedCategory, (page[selectedCategory] || 1) + 1);
     }
   }, [selectedCategory, hasMore, loading, page, loadNews]);
-
-  const memoizedCategories = useMemo(() => categoriesData.map(c => c.name), []);
 
   return (
     <ThemedView>
