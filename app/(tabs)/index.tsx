@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { categoriesData } from '@/services/apiWp';
@@ -7,9 +7,9 @@ import styles from '@/styles/styles';
 import screenWidth from '@/utils/dimensions';
 import useLoadNews from '@/hooks/useLoadNews';
 import useCategorySelection from '@/hooks/useCategorySelection';
+import useRefreshNews from '@/hooks/useRefreshNews';
 
 export default function HomeScreen() {
-  const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef<FlatList<string>>(null);
 
   const { newsData, loading, hasMore, loadNews, page } = useLoadNews();
@@ -23,14 +23,7 @@ export default function HomeScreen() {
     }
   }, [selectedCategory, loadNews, newsData]);
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    const category = categoriesData.find(c => c.name === selectedCategory);
-    if (category) {
-      await loadNews(category.id, selectedCategory);
-    }
-    setRefreshing(false);
-  }, [loadNews, selectedCategory]);
+  const { refreshing, onRefresh } = useRefreshNews(selectedCategory, loadNews);
 
   const renderCategoryItem = useCallback(
     ({ item }: { item: string }) => (
