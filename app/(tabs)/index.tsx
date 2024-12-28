@@ -26,21 +26,19 @@ export default function HomeScreen() {
 
   return (
     <ThemedView>
-      <View style={styles.container}>
-        <CategorySelector categories={memoizedCategories} selectedCategory={selectedCategory} onSelectCategory={handleCategorySelect} flatListRef={flatListRef} />
-        <NewsList
-          newsData={newsData}
-          loading={loading}
-          hasMore={hasMore}
-          loadMoreNews={loadMoreNews}
-          onRefresh={onRefresh}
-          refreshing={refreshing}
-          newsListRef={newsListRef}
-          onScrollBeginDrag={onScrollBeginDrag}
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          memoizedCategories={memoizedCategories}
-        />
-      </View>
+      <CategorySelector categories={memoizedCategories} selectedCategory={selectedCategory} onSelectCategory={handleCategorySelect} flatListRef={flatListRef} />
+      <NewsList
+        newsData={newsData}
+        loading={loading}
+        hasMore={hasMore}
+        loadMoreNews={loadMoreNews}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        newsListRef={newsListRef}
+        onScrollBeginDrag={onScrollBeginDrag}
+        onMomentumScrollEnd={onMomentumScrollEnd}
+        memoizedCategories={memoizedCategories}
+      />
     </ThemedView>
   );
 }
