@@ -11,10 +11,9 @@ import useRefreshNews from '@/hooks/useRefreshNews';
 
 export default function HomeScreen() {
   const flatListRef = useRef<FlatList<string>>(null);
-
   const { newsData, loading, hasMore, loadNews, page } = useLoadNews();
-
   const { selectedCategory, handleCategorySelect, newsListRef, memoizedCategories, setSelectedCategory } = useCategorySelection(newsData, loadNews);
+  const { refreshing, onRefresh } = useRefreshNews(selectedCategory, loadNews);
 
   useEffect(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
@@ -22,8 +21,6 @@ export default function HomeScreen() {
       loadNews(category.id, selectedCategory);
     }
   }, [selectedCategory, loadNews, newsData]);
-
-  const { refreshing, onRefresh } = useRefreshNews(selectedCategory, loadNews);
 
   const renderCategoryItem = useCallback(
     ({ item }: { item: string }) => (
