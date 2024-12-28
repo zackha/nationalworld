@@ -3,7 +3,7 @@ import Logo from '@/components/Logo';
 
 const categories = ['All', 'News', 'Business', 'Innovation', 'Culture', 'Entertainment', 'Science', 'Health'];
 
-export function Header() {
+const Header = () => {
   return (
     <View style={styles.header}>
       <View style={styles.logoContainer}>
@@ -19,7 +19,9 @@ export function Header() {
       </ScrollView>
     </View>
   );
-}
+};
+
+export default Header;
 
 const styles = StyleSheet.create({
   header: {
