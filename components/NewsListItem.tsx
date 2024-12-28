@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-export function NewsItemComponent({ item, index }: Props & { index: number }) {
+export const NewsListItemComponent = ({ item, index }: Props & { index: number }) => {
   if (index === 0) {
     return (
       <View>
@@ -48,7 +48,7 @@ export function NewsItemComponent({ item, index }: Props & { index: number }) {
       </View>
     );
   }
-}
+};
 
 const styles = StyleSheet.create({
   featuredImage: {

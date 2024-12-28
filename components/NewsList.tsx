@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
-import { View, FlatList, RefreshControl, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
 import styles from '@/styles/styles';
 import screenWidth from '@/utils/dimensions';
 import type { NewsItemWp } from '@/types';
+import { NewsListItemComponent } from '@/components/NewsListItem';
 
 interface NewsListProps {
   newsData: Record<string, NewsItemWp[]>;
@@ -29,14 +29,6 @@ const NewsList: React.FC<NewsListProps> = ({
   onScrollBeginDrag,
   onMomentumScrollEnd,
 }) => {
-  const renderNewsItem = useCallback(
-    ({ item }: { item: NewsItemWp }) => (
-      <View style={styles.newsItem}>
-        <Text style={styles.newsText}>{item.title}</Text>
-      </View>
-    ),
-    []
-  );
   return (
     <FlatList
       ref={newsListRef}
@@ -61,7 +53,7 @@ const NewsList: React.FC<NewsListProps> = ({
               maxToRenderPerBatch={6}
               data={newsData[item]}
               keyExtractor={newsItem => newsItem.guid}
-              renderItem={renderNewsItem}
+              renderItem={({ item, index }) => <NewsListItemComponent item={item} index={index} />}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.newsList}
