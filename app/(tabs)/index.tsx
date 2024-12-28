@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { categoriesData } from '@/services/apiWp';
@@ -8,12 +8,13 @@ import screenWidth from '@/utils/dimensions';
 import useLoadNews from '@/hooks/useLoadNews';
 import useCategorySelection from '@/hooks/useCategorySelection';
 import useRefreshNews from '@/hooks/useRefreshNews';
+import useScrollHandlers from '@/hooks/useScrollHandlers';
 
 export default function HomeScreen() {
-  const flatListRef = useRef<FlatList<string>>(null);
   const { newsData, loading, hasMore, loadNews, page } = useLoadNews();
   const { selectedCategory, handleCategorySelect, newsListRef, memoizedCategories, setSelectedCategory } = useCategorySelection(newsData, loadNews);
   const { refreshing, onRefresh } = useRefreshNews(selectedCategory, loadNews);
+  const { onScrollBeginDrag, onMomentumScrollEnd, flatListRef } = useScrollHandlers(newsData, loadNews, setSelectedCategory);
 
   useEffect(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
@@ -60,31 +61,8 @@ export default function HomeScreen() {
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item}
           getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
-          onScrollBeginDrag={event => {
-            const offsetX = event.nativeEvent.contentOffset.x;
-            const currentIndex = Math.round(offsetX / screenWidth);
-            const nextIndex = currentIndex + 1;
-            const previousIndex = currentIndex - 1;
-
-            const categoriesToLoad = [
-              categoriesData[nextIndex]?.name,
-              categoriesData[nextIndex + 1]?.name,
-              categoriesData[previousIndex]?.name,
-              categoriesData[previousIndex - 1]?.name,
-            ].filter(Boolean);
-
-            categoriesToLoad.forEach(catName => {
-              const category = categoriesData.find(c => c.name === catName);
-              if (category && !newsData[catName]) {
-                loadNews(category.id, catName);
-              }
-            });
-          }}
-          onMomentumScrollEnd={event => {
-            const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-            setSelectedCategory(categoriesData[index].name);
-            flatListRef.current?.scrollToIndex({ index, animated: true });
-          }}
+          onScrollBeginDrag={onScrollBeginDrag}
+          onMomentumScrollEnd={onMomentumScrollEnd}
           renderItem={({ item }) => (
             <View style={{ width: screenWidth }}>
               {loading[item] && !refreshing && !hasMore[item] ? (
