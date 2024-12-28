@@ -12,7 +12,7 @@ interface CategorySelectorProps {
 const CategorySelector: React.FC<CategorySelectorProps> = ({ categories, selectedCategory, onSelectCategory, flatListRef }) => {
   const renderCategoryItem = useCallback(
     ({ item }: { item: string }) => (
-      <TouchableOpacity onPress={() => onSelectCategory(item)} style={styles.categoryButton}>
+      <TouchableOpacity onPress={() => onSelectCategory(item)}>
         <Text style={[styles.categoryText, item === selectedCategory && styles.selectedCategoryText]}>{item}</Text>
         {item === selectedCategory && <View style={styles.underline} />}
       </TouchableOpacity>

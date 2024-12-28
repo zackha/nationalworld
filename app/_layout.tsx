@@ -17,7 +17,8 @@ export default function RootLayout() {
     BBCReithSerifMd: require('@/assets/fonts/BBCReithSerif_A_Md.ttf'),
     BBCReithSerifRg: require('@/assets/fonts/BBCReithSerif_A_Rg.ttf'),
     BBCReithSansMd: require('@/assets/fonts/BBCReithSans_A_Md.ttf'),
-    BBCReithSansrg: require('@/assets/fonts/BBCReithSans_A_Rg.ttf'),
+    BBCReithSansRg: require('@/assets/fonts/BBCReithSans_A_Rg.ttf'),
+    BBCReithSansBd: require('@/assets/fonts/BBCReithSans_A_Bd.ttf'),
   });
 
   useEffect(() => {

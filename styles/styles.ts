@@ -1,25 +1,16 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  categoryButton: {
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   categoryText: {
     fontSize: 16,
-    color: '#555',
+    color: '#fff',
+    fontFamily: 'BBCReithSansMd',
   },
   selectedCategoryText: {
-    fontWeight: 'bold',
-    color: '#000',
+    fontFamily: 'BBCReithSansBd',
+    color: '#eb342e',
   },
-  underline: {
-    height: 2,
-    backgroundColor: '#000',
-    width: '100%',
-    marginTop: 5,
-  },
+  underline: {},
   newsList: {},
   loader: {
     flex: 1,

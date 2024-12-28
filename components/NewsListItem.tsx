@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   metaInfoText: {
     fontSize: 12,
     color: '#999',
-    fontFamily: 'BBCReithSansrg',
+    fontFamily: 'BBCReithSansRg',
   },
   metaInfoDivider: {
     height: '80%',
