@@ -1,4 +1,5 @@
-import { View, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
+import React, { useCallback } from 'react';
+import { View, FlatList, RefreshControl, ActivityIndicator, Text } from 'react-native';
 import styles from '@/styles/styles';
 import screenWidth from '@/utils/dimensions';
 import type { NewsItemWp } from '@/types';
@@ -11,7 +12,6 @@ interface NewsListProps {
   memoizedCategories: any[];
   onRefresh: () => void;
   loadMoreNews: () => void;
-  renderNewsItem: ({ item }: { item: NewsItemWp }) => JSX.Element;
   newsListRef: React.RefObject<FlatList<string>>;
   onScrollBeginDrag: (event: any) => void;
   onMomentumScrollEnd: (event: any) => void;
@@ -25,11 +25,18 @@ const NewsList: React.FC<NewsListProps> = ({
   memoizedCategories,
   onRefresh,
   loadMoreNews,
-  renderNewsItem,
   newsListRef,
   onScrollBeginDrag,
   onMomentumScrollEnd,
 }) => {
+  const renderNewsItem = useCallback(
+    ({ item }: { item: NewsItemWp }) => (
+      <View style={styles.newsItem}>
+        <Text style={styles.newsText}>{item.title}</Text>
+      </View>
+    ),
+    []
+  );
   return (
     <FlatList
       ref={newsListRef}

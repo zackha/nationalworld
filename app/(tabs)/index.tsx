@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { categoriesData } from '@/services/apiWp';
-import type { NewsItemWp } from '@/types';
 import styles from '@/styles/styles';
 import useLoadNews from '@/hooks/useLoadNews';
 import useCategorySelection from '@/hooks/useCategorySelection';
@@ -33,15 +32,6 @@ export default function HomeScreen() {
     [selectedCategory]
   );
 
-  const renderNewsItem = useCallback(
-    ({ item }: { item: NewsItemWp }) => (
-      <View style={styles.newsItem}>
-        <Text style={styles.newsText}>{item.title}</Text>
-      </View>
-    ),
-    []
-  );
-
   const loadMoreNews = useCallback(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
     if (category && hasMore[selectedCategory] && !loading[selectedCategory]) {
@@ -60,7 +50,6 @@ export default function HomeScreen() {
           loadMoreNews={loadMoreNews}
           onRefresh={onRefresh}
           refreshing={refreshing}
-          renderNewsItem={renderNewsItem}
           newsListRef={newsListRef}
           onScrollBeginDrag={onScrollBeginDrag}
           onMomentumScrollEnd={onMomentumScrollEnd}
