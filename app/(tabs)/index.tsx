@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { categoriesData } from '@/services/apiWp';
 import type { NewsItemWp } from '@/types';
 import styles from '@/styles/styles';
-import screenWidth from '@/utils/dimensions';
 import useLoadNews from '@/hooks/useLoadNews';
 import useCategorySelection from '@/hooks/useCategorySelection';
 import useRefreshNews from '@/hooks/useRefreshNews';
 import useScrollHandlers from '@/hooks/useScrollHandlers';
+import NewsList from '@/components/NewsList';
 
 export default function HomeScreen() {
   const { newsData, loading, hasMore, loadNews, page } = useLoadNews();
@@ -53,40 +53,18 @@ export default function HomeScreen() {
     <ThemedView>
       <View style={styles.container}>
         <FlatList ref={flatListRef} data={memoizedCategories} horizontal showsHorizontalScrollIndicator={false} keyExtractor={item => item} renderItem={renderCategoryItem} />
-        <FlatList
-          ref={newsListRef}
-          data={memoizedCategories}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={item => item}
-          getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
+        <NewsList
+          newsData={newsData}
+          loading={loading}
+          hasMore={hasMore}
+          loadMoreNews={loadMoreNews}
+          onRefresh={onRefresh}
+          refreshing={refreshing}
+          renderNewsItem={renderNewsItem}
+          newsListRef={newsListRef}
           onScrollBeginDrag={onScrollBeginDrag}
           onMomentumScrollEnd={onMomentumScrollEnd}
-          renderItem={({ item }) => (
-            <View style={{ width: screenWidth }}>
-              {loading[item] && !refreshing && !hasMore[item] ? (
-                <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
-              ) : (
-                <FlatList
-                  windowSize={6}
-                  key="articles"
-                  removeClippedSubviews
-                  initialNumToRender={6}
-                  maxToRenderPerBatch={6}
-                  data={newsData[item]}
-                  keyExtractor={newsItem => newsItem.guid}
-                  renderItem={renderNewsItem}
-                  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={styles.newsList}
-                  onEndReached={loadMoreNews}
-                  onEndReachedThreshold={1}
-                  ListFooterComponent={loading[item] && hasMore[item] ? <ActivityIndicator size="small" color="#0000ff" /> : null}
-                />
-              )}
-            </View>
-          )}
+          memoizedCategories={memoizedCategories}
         />
       </View>
     </ThemedView>
