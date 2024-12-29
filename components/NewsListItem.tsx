@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
   featuredImage: {
     width: '100%',
     height: 215,
+    backgroundColor: '#262626',
   },
   featuredContent: {
     margin: 14,
@@ -86,6 +87,7 @@ const styles = StyleSheet.create({
     height: 80,
     width: '35%',
     objectFit: 'cover',
+    backgroundColor: '#262626',
   },
   secondaryContent: {
     flex: 1,
