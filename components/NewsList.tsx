@@ -43,7 +43,7 @@ const NewsList: React.FC<NewsListProps> = ({
       renderItem={({ item }) => (
         <View style={{ width: screenWidth }}>
           {loading[item] && !refreshing && !hasMore[item] ? (
-            <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+            <ActivityIndicator />
           ) : (
             <FlatList
               windowSize={6}
@@ -59,7 +59,7 @@ const NewsList: React.FC<NewsListProps> = ({
               contentContainerStyle={styles.newsList}
               onEndReached={loadMoreNews}
               onEndReachedThreshold={1}
-              ListFooterComponent={loading[item] && hasMore[item] ? <ActivityIndicator size="small" color="#0000ff" /> : null}
+              ListFooterComponent={hasMore[item] ? <ActivityIndicator /> : null}
             />
           )}
         </View>
