@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, FlatList, RefreshControl, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import screenWidth from '@/utils/dimensions';
 import type { NewsItemWp } from '@/types';
 import { NewsListItemComponent } from '@/components/NewsListItem';
@@ -30,14 +31,24 @@ const NewsList: React.FC<NewsListProps> = ({
   onMomentumScrollEnd,
 }) => {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const toastPosition = useSharedValue(-50);
 
   useEffect(() => {
     if (Object.keys(loading).length && !refreshing) {
       setLastUpdated('Just now');
-      const timer = setTimeout(() => setLastUpdated(null), 5000);
+      toastPosition.value = 10;
+      const timer = setTimeout(() => {
+        toastPosition.value = -50;
+        setLastUpdated(null);
+      }, 5000);
+
       return () => clearTimeout(timer);
     }
   }, [refreshing]);
+
+  const toastStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: withTiming(toastPosition.value, { duration: 100 }) }],
+  }));
 
   return (
     <FlatList
@@ -53,9 +64,9 @@ const NewsList: React.FC<NewsListProps> = ({
       renderItem={({ item }) => (
         <View style={{ width: screenWidth }}>
           {lastUpdated && (
-            <View style={styles.lastUpdatedContainer}>
+            <Animated.View style={[styles.lastUpdatedContainer, toastStyle]}>
               <Text style={styles.lastUpdatedText}>Last updated: {lastUpdated}</Text>
-            </View>
+            </Animated.View>
           )}
           {loading[item] && !refreshing && !hasMore[item] ? (
             <ActivityIndicator />
@@ -91,7 +102,6 @@ const styles = StyleSheet.create({
   },
   lastUpdatedContainer: {
     position: 'absolute',
-    top: 10,
     alignSelf: 'center',
     backgroundColor: 'rgba(0,0,0,0.6)',
     paddingVertical: 10,
