@@ -38,7 +38,7 @@ export const categoriesData = [
 
 export const fetchNews = async (page: number = 1, categoryId: number = 20): Promise<NewsItemWp[]> => {
   return api
-    .url(`/wp-json/wp/v2/posts?order_by=date&per_page=21&page=${page}&categories=${categoryId}`)
+    .url(`/wp-json/wp/v2/posts?order_by=date&per_page=12&page=${page}&categories=${categoryId}`)
     .get()
     .json(result =>
       result.map((item: WPPost) => ({
