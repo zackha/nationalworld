@@ -40,7 +40,7 @@ const NewsList: React.FC<NewsListProps> = ({
       const timer = setTimeout(() => {
         toastPosition.value = -50;
         setLastUpdated(null);
-      }, 5000);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
