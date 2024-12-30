@@ -100,9 +100,7 @@ const NewsList: React.FC<NewsListProps> = ({
 export default NewsList;
 
 const styles = StyleSheet.create({
-  newsList: {
-    paddingBottom: 20,
-  },
+  newsList: {},
   lastUpdatedContainer: {
     position: 'absolute',
     alignSelf: 'center',
