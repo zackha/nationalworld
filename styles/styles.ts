@@ -1,7 +1,5 @@
 import { StyleSheet } from 'react-native';
 
-const styles = StyleSheet.create({
-  newsList: {},
-});
+const styles = StyleSheet.create({});
 
 export default styles;
