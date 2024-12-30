@@ -4,6 +4,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-na
 import screenWidth from '@/utils/dimensions';
 import type { NewsItemWp } from '@/types';
 import { NewsListItemComponent } from '@/components/NewsListItem';
+import { BlurView } from 'expo-blur';
 
 interface NewsListProps {
   newsData: Record<string, NewsItemWp[]>;
@@ -65,7 +66,9 @@ const NewsList: React.FC<NewsListProps> = ({
         <View style={{ width: screenWidth }}>
           {lastUpdated && (
             <Animated.View style={[styles.lastUpdatedContainer, toastStyle]}>
-              <Text style={styles.lastUpdatedText}>Last updated: {lastUpdated}</Text>
+              <BlurView intensity={70} style={styles.blurContainer}>
+                <Text style={styles.lastUpdatedText}>Last updated: {lastUpdated}</Text>
+              </BlurView>
             </Animated.View>
           )}
           {loading[item] && !refreshing && !hasMore[item] ? (
@@ -103,13 +106,15 @@ const styles = StyleSheet.create({
   lastUpdatedContainer: {
     position: 'absolute',
     alignSelf: 'center',
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    zIndex: 1,
+  },
+  blurContainer: {
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 99,
-    zIndex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   lastUpdatedText: {
     fontFamily: 'BBCReithSansRg',
