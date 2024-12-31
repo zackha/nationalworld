@@ -1,7 +1,7 @@
 import type { NewsItemWp, WPPost } from '@/types';
 import wretch from 'wretch';
 
-const API_WP = 'https://cumbriacrack.com';
+const API_WP = 'http://localhost:3001';
 const api = wretch(API_WP).options({
   mode: 'cors',
   credentials: 'include',

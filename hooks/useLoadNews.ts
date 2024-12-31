@@ -21,13 +21,13 @@ const useLoadNews = (selectedCategory: string) => {
             ...prev,
             [categoryName]: pageNumber === 1 ? newsItems : [...(prev[categoryName] || []), ...newsItems],
           }));
-          setHasMore(prev => ({ ...prev, [categoryName]: newsItems.length > 0 }));
+          setHasMore(prev => ({ ...prev, [categoryName]: newsItems.length === 21 }));
           setPage(prev => ({ ...prev, [categoryName]: pageNumber }));
         } catch (error) {
           if (error instanceof Error && error.message.includes('rest_post_invalid_page_number')) {
             setHasMore(prev => ({ ...prev, [categoryName]: false }));
           }
-          console.error(`Error fetching news for ${categoryName}:`, error);
+          console.log(`Error fetching news for ${categoryName}:`, error);
         } finally {
           setLoading(prev => ({ ...prev, [categoryName]: false }));
         }
