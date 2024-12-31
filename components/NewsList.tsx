@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, FlatList, RefreshControl, Text, StyleSheet } from 'react-native';
+import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import screenWidth from '@/utils/dimensions';
 import type { NewsItemWp } from '@/types';
@@ -73,7 +73,7 @@ const NewsList: React.FC<NewsListProps> = ({
             </Animated.View>
           )}
           {loading[item] && !refreshing && !hasMore[item] ? (
-            <SkeletonLoadingNews />
+            <ActivityIndicator style={{ flex: 1 }} />
           ) : (
             <FlatList
               windowSize={6}
@@ -89,7 +89,7 @@ const NewsList: React.FC<NewsListProps> = ({
               contentContainerStyle={styles.newsList}
               onEndReached={loadMoreNews}
               onEndReachedThreshold={1}
-              ListFooterComponent={hasMore[item] ? <SkeletonHasMoreNews /> : null}
+              ListFooterComponent={hasMore[item] ? <ActivityIndicator style={{ padding: 28 }} /> : null}
             />
           )}
         </View>

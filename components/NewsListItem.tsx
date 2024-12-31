@@ -11,7 +11,7 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    opacity.value = withTiming(1, { duration: 150 });
+    opacity.value = withTiming(1, { duration: 200 });
   });
 
   const animatedStyle = useAnimatedStyle(() => ({
