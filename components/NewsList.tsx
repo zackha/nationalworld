@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { View, FlatList, RefreshControl, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import { View, FlatList, RefreshControl, Text, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import screenWidth from '@/utils/dimensions';
 import type { NewsItemWp } from '@/types';
 import { NewsListItemComponent } from '@/components/NewsListItem';
 import { BlurView } from 'expo-blur';
+import { SkeletonHasMoreNews, SkeletonLoadingNews } from '@/components/Skeleton';
 
 interface NewsListProps {
   newsData: Record<string, NewsItemWp[]>;
@@ -72,7 +73,7 @@ const NewsList: React.FC<NewsListProps> = ({
             </Animated.View>
           )}
           {loading[item] && !refreshing && !hasMore[item] ? (
-            <ActivityIndicator />
+            <SkeletonLoadingNews />
           ) : (
             <FlatList
               windowSize={6}
@@ -88,7 +89,7 @@ const NewsList: React.FC<NewsListProps> = ({
               contentContainerStyle={styles.newsList}
               onEndReached={loadMoreNews}
               onEndReachedThreshold={1}
-              ListFooterComponent={hasMore[item] ? <ActivityIndicator /> : null}
+              ListFooterComponent={hasMore[item] ? <SkeletonHasMoreNews /> : null}
             />
           )}
         </View>
