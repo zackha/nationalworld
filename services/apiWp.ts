@@ -36,9 +36,9 @@ export const categoriesData = [
   { id: 33236, name: "Walshie's Week" },
 ];
 
-export const fetchNews = async (page: number = 1, categoryId: number = 20): Promise<NewsItemWp[]> => {
+export const fetchNews = async (page: number = 1, categoryId: number = 20, perPage: number = 21): Promise<NewsItemWp[]> => {
   return api
-    .url(`/wp-json/wp/v2/posts?order_by=date&per_page=21&page=${page}&categories=${categoryId}`)
+    .url(`/wp-json/wp/v2/posts?order_by=date&per_page=${perPage}&page=${page}&categories=${categoryId}`)
     .get()
     .json(result =>
       result.map((item: WPPost) => ({
@@ -52,4 +52,14 @@ export const fetchNews = async (page: number = 1, categoryId: number = 20): Prom
         image: extractImageUrl(item.content.rendered),
       }))
     );
+};
+
+export const fetchAllCategoryNews = async (): Promise<NewsItemWp[]> => {
+  const predefinedCategories = [
+    { id: 7, name: 'Sport', perPage: 1 },
+    { id: 33246, name: 'Business Crack', perPage: 1 },
+  ];
+  const fetchPromises = predefinedCategories.map(category => fetchNews(1, category.id, category.perPage));
+  const allNews = await Promise.all(fetchPromises);
+  return allNews.flat();
 };
