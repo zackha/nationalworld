@@ -7,3 +7,5 @@
 - Fix: All functions and structure redesign and develop
 - Fix: All styles and class names recreate
 - Add: Notification
+- Add: SplashScreen
+- Add: Onboard Screen

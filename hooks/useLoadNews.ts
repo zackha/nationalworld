@@ -13,8 +13,10 @@ const useLoadNews = (selectedCategory: string) => {
     async (categoryId: number, categoryName: string, pageNumber: number = 1) => {
       if (loading[categoryName] || hasMore[categoryName] === false) return;
       setLoading(prev => ({ ...prev, [categoryName]: true }));
+      console.log(`\x1b[33m[LOADING] Fetching news for ${categoryName} (ID: ${categoryId}, Page: ${pageNumber})...\x1b[0m`);
       try {
         const newsItems = await fetchNews(pageNumber, categoryId);
+        console.log(`\x1b[32m[SUCCESS] Fetched ${newsItems.length} items for ${categoryName} (Page: ${pageNumber}).\x1b[0m`);
         setNewsData(prev => ({
           ...prev,
           [categoryName]: pageNumber === 1 ? newsItems : [...(prev[categoryName] || []), ...newsItems],
