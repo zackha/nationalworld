@@ -1,14 +1,26 @@
+import { useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { decodeHTML } from 'entities';
 import type { Props } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 dayjs.extend(relativeTime);
 
 export const NewsListItemComponent = ({ item, index }: Props & { index: number }) => {
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    opacity.value = withTiming(1, { duration: 150 });
+  });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+
   if (index === 0) {
     return (
-      <View>
+      <Animated.View style={animatedStyle}>
         <Image source={{ uri: item.image }} style={styles.articleOneImage} />
         <View style={styles.articleOneDescription}>
           <Text style={styles.articleOneTitle}>{decodeHTML(item.title)}</Text>
@@ -19,11 +31,11 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
             <Text style={styles.articleMetaInfoText}>World</Text>
           </View>
         </View>
-      </View>
+      </Animated.View>
     );
   } else if (index >= 1 && index <= 3) {
     return (
-      <View style={styles.articleTwoContainer}>
+      <Animated.View style={[styles.articleTwoContainer, animatedStyle]}>
         <Image source={{ uri: item.image }} style={styles.articleTwoImage} />
         <View style={styles.articleTwoContent}>
           <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
@@ -33,11 +45,11 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
             <Text style={styles.articleMetaInfoText}>World</Text>
           </View>
         </View>
-      </View>
+      </Animated.View>
     );
   } else if (index === 4) {
     return (
-      <View style={styles.articleThreeContainer}>
+      <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <Image source={{ uri: item.image }} style={styles.articleOneImage} />
         <View style={styles.articleTwoContent}>
           <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
@@ -48,11 +60,11 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
             <Text style={styles.articleMetaInfoText}>World</Text>
           </View>
         </View>
-      </View>
+      </Animated.View>
     );
   } else if (index === 5 || index === 6) {
     return (
-      <View style={styles.articleThreeContainer}>
+      <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
         <Text style={styles.articleDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
         <View style={styles.articleMetaInfo}>
@@ -60,11 +72,11 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
           <View style={styles.articleMetaInfoDivider} />
           <Text style={styles.articleMetaInfoText}>World</Text>
         </View>
-      </View>
+      </Animated.View>
     );
   } else if (index >= 7 && index <= 20) {
     return (
-      <View style={styles.articleThreeContainer}>
+      <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <Image source={{ uri: item.image }} style={styles.articleOneImage} />
         <View style={styles.articleTwoContent}>
           <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
@@ -75,11 +87,11 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
             <Text style={styles.articleMetaInfoText}>World</Text>
           </View>
         </View>
-      </View>
+      </Animated.View>
     );
   } else {
     return (
-      <View style={styles.articleThreeContainer}>
+      <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <View style={styles.articleFourContent}>
           <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
           <Image source={{ uri: item.image }} style={styles.articleFourImage} />
@@ -90,7 +102,7 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
           <View style={styles.articleMetaInfoDivider} />
           <Text style={styles.articleMetaInfoText}>World</Text>
         </View>
-      </View>
+      </Animated.View>
     );
   }
 };
