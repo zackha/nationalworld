@@ -11,29 +11,25 @@ const useLoadNews = (selectedCategory: string) => {
 
   const loadNews = useCallback(
     async (categoryId: number, categoryName: string, pageNumber: number = 1) => {
-      if (!loading[categoryName]) {
-        console.log(`\x1b[33mFetching...... ${categoryName} (ID: ${categoryId})\x1b[0m`);
-        setLoading(prev => ({ ...prev, [categoryName]: true }));
-        try {
-          const newsItems = await fetchNews(pageNumber, categoryId);
-          console.log(`\x1b[32mFetched! ${categoryName}\x1b[0m`);
-          setNewsData(prev => ({
-            ...prev,
-            [categoryName]: pageNumber === 1 ? newsItems : [...(prev[categoryName] || []), ...newsItems],
-          }));
-          setHasMore(prev => ({ ...prev, [categoryName]: newsItems.length === 21 }));
-          setPage(prev => ({ ...prev, [categoryName]: pageNumber }));
-        } catch (error) {
-          if (error instanceof Error && error.message.includes('rest_post_invalid_page_number')) {
-            setHasMore(prev => ({ ...prev, [categoryName]: false }));
-          }
-          console.log(`Error fetching news for ${categoryName}:`, error);
-        } finally {
-          setLoading(prev => ({ ...prev, [categoryName]: false }));
+      if (loading[categoryName] || hasMore[categoryName] === false) return;
+      setLoading(prev => ({ ...prev, [categoryName]: true }));
+      try {
+        const newsItems = await fetchNews(pageNumber, categoryId);
+        setNewsData(prev => ({
+          ...prev,
+          [categoryName]: pageNumber === 1 ? newsItems : [...(prev[categoryName] || []), ...newsItems],
+        }));
+        setHasMore(prev => ({ ...prev, [categoryName]: newsItems.length === 21 }));
+        setPage(prev => ({ ...prev, [categoryName]: pageNumber }));
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('rest_post_invalid_page_number')) {
+          setHasMore(prev => ({ ...prev, [categoryName]: false }));
         }
+      } finally {
+        setLoading(prev => ({ ...prev, [categoryName]: false }));
       }
     },
-    [loading]
+    [loading, hasMore]
   );
 
   const loadMoreNews = useCallback(() => {
