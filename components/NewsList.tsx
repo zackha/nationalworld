@@ -53,7 +53,6 @@ const NewsList: React.FC<NewsListProps> = ({
     transform: [{ translateY: withTiming(toastPosition.value, { duration: 100 }) }],
   }));
 
-  // Handle navigation to a specific category
   const handleSeeMore = (categoryName: string) => {
     const categoryIndex = memoizedCategories.findIndex(cat => cat === categoryName);
     if (categoryIndex >= 0) {
