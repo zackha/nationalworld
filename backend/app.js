@@ -1,4 +1,5 @@
 import express from 'express';
+import os from 'os';
 const app = express();
 const port = 3001;
 
@@ -12194,6 +12195,19 @@ const examplePosts = [
   },
 ];
 
+function getLocalIPAddress() {
+  const networkInterfaces = os.networkInterfaces();
+
+  for (const interfaceName in networkInterfaces) {
+    for (const network of networkInterfaces[interfaceName]) {
+      if (network.family === 'IPv4' && !network.internal) {
+        return network.address; // Yerel IP adresini döner
+      }
+    }
+  }
+  return 'localhost'; // Eğer IP adresi bulunamazsa localhost döner
+}
+
 app.get('/wp-json/wp/v2/posts', (req, res) => {
   const { page = 1, per_page = 21, categories } = req.query;
 
@@ -12220,6 +12234,9 @@ app.get('/wp-json/wp/v2/posts', (req, res) => {
 });
 
 // Sunucuyu başlat
-app.listen(port, () => {
-  console.log(`API çalışıyor: http://localhost:${port}/wp-json/wp/v2/posts`);
+app.listen(port, '0.0.0.0', () => {
+  const localIP = getLocalIPAddress();
+  console.log(`API çalışıyor:`);
+  console.log(` - Yerel: http://localhost:${port}/wp-json/wp/v2/posts`);
+  console.log(` - Ağ:   http://${localIP}:${port}/wp-json/wp/v2/posts`);
 });
