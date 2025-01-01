@@ -1,15 +1,5 @@
-export type NewsItemXml = {
-  title: string;
-  link: string;
-  description: string;
-  pubDate: string;
-  guid: string;
-  creator: string;
-  categories: string[];
-  image: string;
-};
-
-export type NewsItemWp = {
+// Haber veri tipi (WordPress)
+export interface NewsItemWp {
   title: string;
   link: string;
   description: string;
@@ -17,8 +7,8 @@ export type NewsItemWp = {
   guid: string;
   creator: number;
   categories: number[];
-  image: string;
-};
+  image: string | null;
+}
 
 export interface WPPost {
   id: number;
@@ -31,6 +21,28 @@ export interface WPPost {
   content: { rendered: string };
 }
 
-export interface Props {
-  item: NewsItemWp;
+export interface CategoryData {
+  id: number;
+  name: string;
+}
+
+export interface AllCategoryNews {
+  categoryName: string;
+  news: NewsItemWp[];
+}
+
+export interface LoadingState {
+  [key: string]: boolean;
+}
+
+export interface NewsDataState {
+  [key: string]: NewsItemWp[] | AllCategoryNews[];
+}
+
+export interface PaginationState {
+  [key: string]: number;
+}
+
+export interface HasMoreState {
+  [key: string]: boolean;
 }

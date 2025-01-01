@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from '@/hooks/ui/useColorScheme';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -17,7 +17,8 @@ export default function RootLayout() {
     BBCReithSerifMd: require('@/assets/fonts/BBCReithSerif_A_Md.ttf'),
     BBCReithSerifRg: require('@/assets/fonts/BBCReithSerif_A_Rg.ttf'),
     BBCReithSansMd: require('@/assets/fonts/BBCReithSans_A_Md.ttf'),
-    BBCReithSansrg: require('@/assets/fonts/BBCReithSans_A_Rg.ttf'),
+    BBCReithSansRg: require('@/assets/fonts/BBCReithSans_A_Rg.ttf'),
+    BBCReithSansBd: require('@/assets/fonts/BBCReithSans_A_Bd.ttf'),
   });
 
   useEffect(() => {
