@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { fetchAllCategoryNews, fetchNews } from '@/services/apiWp';
-import type { NewsDataState, LoadingState } from '@/types';
+import type { NewsDataState, LoadingState, AllCategoryNews, NewsItemWp } from '@/types';
 import { categoriesData } from '@/services/apiWp';
 
 const useLoadNews = (selectedCategory: string) => {
@@ -18,7 +18,7 @@ const useLoadNews = (selectedCategory: string) => {
         const newsItems = await fetchAllCategoryNews();
         setNewsData(prev => ({
           ...prev,
-          [categoryName]: pageNumber === 1 ? newsItems : [...(prev[categoryName] || []), ...newsItems],
+          [categoryName]: pageNumber === 1 ? newsItems : [...((prev[categoryName] as AllCategoryNews[]) || []), ...newsItems],
         }));
         console.log(`All Category News: ${newsItems.length}`);
       }
@@ -28,7 +28,7 @@ const useLoadNews = (selectedCategory: string) => {
         setNewsData(prev => {
           const updatedNewsData = {
             ...prev,
-            [categoryName]: pageNumber === 1 ? newsItems : [...(prev[categoryName] || []), ...newsItems],
+            [categoryName]: pageNumber === 1 ? newsItems : [...((prev[categoryName] as NewsItemWp[]) || []), ...newsItems],
           };
           console.log(`\x1b[32m[UPDATED] News data updated for ${categoryName}\x1b[0m`);
           return updatedNewsData;

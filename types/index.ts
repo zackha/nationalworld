@@ -37,5 +37,5 @@ export interface LoadingState {
 }
 
 export interface NewsDataState {
-  [key: string]: NewsItemWp[];
+  [key: string]: NewsItemWp[] | AllCategoryNews[];
 }
