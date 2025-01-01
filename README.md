@@ -9,3 +9,4 @@
 - Add: Notification
 - Add: SplashScreen
 - Add: Onboard Screen
+- UI: Add Dark and Light Mode

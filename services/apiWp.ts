@@ -14,7 +14,8 @@ const api = wretch(API_WP).options({
 //    .get()
 //    .json(result => result.media_details?.sizes?.medium_large?.source_url);
 //};
-export const extractImageUrl = (description: string): string | null => {
+
+export const extractImageUrl = (description: string) => {
   const match = description.match(/https?:\/\/[^\s]+(?=\s768w|748w)|<img[^>]+src="([^"]+)"/);
   return match ? match[1] || match[0] : null;
 };
@@ -49,15 +50,17 @@ export const fetchNews = async (page: number = 1, categoryId: number = 20, perPa
         guid: `${item.id}`,
         creator: item.author,
         categories: item.categories,
-        image: extractImageUrl(item.content.rendered),
+        image: extractImageUrl(item.content.rendered) || '',
       }))
     );
 };
 
 export const fetchAllCategoryNews = async (): Promise<AllCategoryNews[]> => {
   const predefinedCategories = [
-    { id: 7, name: 'Sport', perPage: 2 },
-    { id: 33246, name: 'Business Crack', perPage: 2 },
+    { id: 20, name: 'News', perPage: 5 },
+    { id: 7, name: 'Sport', perPage: 5 },
+    { id: 33246, name: 'Business Crack', perPage: 7 },
+    { id: 33187, name: 'Sponsored', perPage: 5 },
   ];
 
   const fetchPromises = predefinedCategories.map(async category => {

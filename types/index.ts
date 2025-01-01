@@ -1,4 +1,3 @@
-// Haber veri tipi (WordPress)
 export interface NewsItemWp {
   title: string;
   link: string;
@@ -7,7 +6,7 @@ export interface NewsItemWp {
   guid: string;
   creator: number;
   categories: number[];
-  image: string | null;
+  image: string;
 }
 
 export interface WPPost {

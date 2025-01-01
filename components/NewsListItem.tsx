@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { decodeHTML } from 'entities';
-import type { Props } from '@/types';
+import type { NewsItemWp } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 dayjs.extend(relativeTime);
 
-export const NewsListItemComponent = ({ item, index }: Props & { index: number }) => {
+export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index: number }) => {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
