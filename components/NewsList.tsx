@@ -18,7 +18,6 @@ interface NewsListProps {
   newsListRef: React.RefObject<FlatList<string>>;
   onScrollBeginDrag: (event: any) => void;
   onMomentumScrollEnd: (event: any) => void;
-  selectedCategory: string;
 }
 
 const NewsList: React.FC<NewsListProps> = ({
@@ -32,7 +31,6 @@ const NewsList: React.FC<NewsListProps> = ({
   newsListRef,
   onScrollBeginDrag,
   onMomentumScrollEnd,
-  selectedCategory,
 }) => {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const toastPosition = useSharedValue(-50);

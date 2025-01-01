@@ -55,12 +55,17 @@ export const fetchNews = async (page: number = 1, categoryId: number = 20, perPa
     );
 };
 
-export const fetchAllCategoryNews = async (): Promise<NewsItemWp[]> => {
+export const fetchAllCategoryNews = async (): Promise<{ categoryName: string; news: NewsItemWp[] }[]> => {
   const predefinedCategories = [
-    { id: 7, name: 'Sport', perPage: 1 },
-    { id: 33246, name: 'Business Crack', perPage: 1 },
+    { id: 7, name: 'Sport', perPage: 2 },
+    { id: 33246, name: 'Business Crack', perPage: 2 },
   ];
-  const fetchPromises = predefinedCategories.map(category => fetchNews(1, category.id, category.perPage));
-  const allNews = await Promise.all(fetchPromises);
-  return allNews.flat();
+
+  const fetchPromises = predefinedCategories.map(async category => {
+    const news = await fetchNews(1, category.id, category.perPage);
+    return { categoryName: category.name, news };
+  });
+
+  const allCategoryNews = await Promise.all(fetchPromises);
+  return allCategoryNews;
 };
