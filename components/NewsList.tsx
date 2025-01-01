@@ -77,14 +77,6 @@ const NewsList: React.FC<NewsListProps> = ({
 
   const renderNewsItem = ({ item, index }: { item: NewsItemWp; index: number }) => <NewsListItemComponent item={item} index={index} />;
 
-  const renderCategoryContent = (category: string) => {
-    return category === 'All' ? renderAllCategoryItem : renderNewsItem;
-  };
-
-  const keyExtractor = (newsItem: AllCategoryNews | NewsItemWp, index: number) => {
-    return memoizedCategories.includes('All') ? `${(newsItem as AllCategoryNews).categoryName}-${index}` : (newsItem as NewsItemWp).guid;
-  };
-
   return (
     <FlatList
       ref={newsListRef}
@@ -114,9 +106,11 @@ const NewsList: React.FC<NewsListProps> = ({
               removeClippedSubviews
               initialNumToRender={6}
               maxToRenderPerBatch={6}
-              data={newsData[item] as AllCategoryNews[] | NewsItemWp[]}
-              keyExtractor={keyExtractor}
-              renderItem={renderCategoryContent(item)}
+              data={newsData[item] as (AllCategoryNews | NewsItemWp)[]}
+              keyExtractor={(newsItem, index) => ('categoryName' in newsItem ? `${newsItem.categoryName}-${index}` : newsItem.guid)}
+              renderItem={
+                ({ item }) => ('categoryName' in item ? renderAllCategoryItem({ item: item as AllCategoryNews }) : renderNewsItem({ item: item as NewsItemWp, index: 0 })) // Örnek index
+              }
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.newsList}
