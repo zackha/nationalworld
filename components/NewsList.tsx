@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import screenWidth from '@/utils/dimensions';
-import type { NewsItemWp, NewsDataState, LoadingState } from '@/types';
+import type { NewsItemWp, NewsDataState, LoadingState, AllCategoryNews } from '@/types';
 import { NewsListItemComponent } from '@/components/NewsListItem';
 import { BlurView } from 'expo-blur';
 
@@ -61,24 +61,28 @@ const NewsList: React.FC<NewsListProps> = ({
     }
   };
 
+  const renderAllCategoryItem = ({ item }: { item: AllCategoryNews }) => (
+    <View style={{ marginBottom: 16 }}>
+      <Text style={styles.categoryTitle}>{item.categoryName}</Text>
+      {item.news.map(newsItem => (
+        <Text key={newsItem.guid} style={styles.newsTitle}>
+          {newsItem.title}
+        </Text>
+      ))}
+      <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
+        <Text style={styles.seeMoreText}>See more</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderNewsItem = ({ item, index }: { item: NewsItemWp; index: number }) => <NewsListItemComponent item={item} index={index} />;
+
   const renderCategoryContent = (category: string) => {
-    if (category === 'All') {
-      return ({ item }: { item: { categoryName: string; news: NewsItemWp[] } }) => (
-        <View style={{ marginBottom: 16 }}>
-          <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold', padding: 14 }}>{item.categoryName}</Text>
-          {item.news.map(newsItem => (
-            <Text key={newsItem.guid} style={{ color: 'white', padding: 14 }}>
-              {newsItem.title}
-            </Text>
-          ))}
-          <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
-            <Text style={styles.seeMoreText}>See more</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    return ({ item, index }: { item: NewsItemWp; index: number }) => <NewsListItemComponent item={item} index={index} />;
+    return category === 'All' ? renderAllCategoryItem : renderNewsItem;
   };
+
+  const keyExtractor = (newsItem: any, index: number) =>
+    memoizedCategories.includes('All') ? `${(newsItem as AllCategoryNews).categoryName}-${index}` : (newsItem as NewsItemWp).guid;
 
   return (
     <FlatList
@@ -109,8 +113,8 @@ const NewsList: React.FC<NewsListProps> = ({
               removeClippedSubviews
               initialNumToRender={6}
               maxToRenderPerBatch={6}
-              data={newsData[item]}
-              keyExtractor={newsItem => newsItem.guid}
+              data={newsData[item] as AllCategoryNews[] | NewsItemWp[]}
+              keyExtractor={keyExtractor}
               renderItem={renderCategoryContent(item)}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               showsVerticalScrollIndicator={false}
@@ -160,5 +164,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  categoryTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    padding: 14,
+  },
+  newsTitle: {
+    color: 'white',
+    padding: 14,
   },
 });
