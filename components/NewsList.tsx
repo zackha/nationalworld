@@ -54,7 +54,7 @@ const NewsList: React.FC<NewsListProps> = ({
   }));
 
   const handleSeeMore = (categoryName: string) => {
-    const categoryIndex = memoizedCategories.findIndex(cat => cat === categoryName);
+    const categoryIndex = memoizedCategories.indexOf(categoryName);
     if (categoryIndex >= 0) {
       setSelectedCategory(categoryName);
       newsListRef.current?.scrollToIndex({ index: categoryIndex, animated: true });
@@ -76,6 +76,11 @@ const NewsList: React.FC<NewsListProps> = ({
   );
 
   const renderNewsItem = ({ item, index }: { item: NewsItemWp; index: number }) => <NewsListItemComponent item={item} index={index} />;
+
+  const renderItem = ({ item, index }: { item: AllCategoryNews | NewsItemWp; index: number }) =>
+    'categoryName' in item ? renderAllCategoryItem({ item }) : renderNewsItem({ item, index });
+
+  const keyExtractor = (item: AllCategoryNews | NewsItemWp, index: number) => ('categoryName' in item ? `${item.categoryName}-${index}` : item.guid);
 
   return (
     <FlatList
@@ -101,22 +106,19 @@ const NewsList: React.FC<NewsListProps> = ({
             <ActivityIndicator style={{ flex: 1 }} />
           ) : (
             <FlatList
-              windowSize={6}
-              key="articles"
-              removeClippedSubviews
-              initialNumToRender={6}
-              maxToRenderPerBatch={6}
               data={newsData[item] as (AllCategoryNews | NewsItemWp)[]}
-              keyExtractor={(newsItem, index) => ('categoryName' in newsItem ? `${newsItem.categoryName}-${index}` : newsItem.guid)}
-              renderItem={
-                ({ item }) => ('categoryName' in item ? renderAllCategoryItem({ item: item as AllCategoryNews }) : renderNewsItem({ item: item as NewsItemWp, index: 0 })) // Örnek index
-              }
+              keyExtractor={keyExtractor}
+              renderItem={renderItem}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-              showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.newsList}
               onEndReached={loadMoreNews}
               onEndReachedThreshold={1}
               ListFooterComponent={hasMore[item] ? <ActivityIndicator style={{ padding: 28 }} /> : null}
+              windowSize={6}
+              initialNumToRender={6}
+              maxToRenderPerBatch={6}
+              removeClippedSubviews
+              showsVerticalScrollIndicator={false}
             />
           )}
         </View>
