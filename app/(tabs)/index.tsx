@@ -38,6 +38,7 @@ export default function HomeScreen() {
         onScrollBeginDrag={onScrollBeginDrag}
         onMomentumScrollEnd={onMomentumScrollEnd}
         memoizedCategories={memoizedCategories}
+        setSelectedCategory={setSelectedCategory}
       />
     </ThemedView>
   );

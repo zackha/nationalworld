@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react';
-import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import screenWidth from '@/utils/dimensions';
-import type { NewsItemWp } from '@/types';
+import type { NewsItemWp, NewsDataState, LoadingState } from '@/types';
 import { NewsListItemComponent } from '@/components/NewsListItem';
 import { BlurView } from 'expo-blur';
-import { SkeletonHasMoreNews, SkeletonLoadingNews } from '@/components/Skeleton';
 
 interface NewsListProps {
-  newsData: Record<string, NewsItemWp[]>;
-  loading: Record<string, boolean>;
-  hasMore: Record<string, boolean>;
+  newsData: NewsDataState;
+  loading: LoadingState;
+  hasMore: LoadingState;
   refreshing: boolean;
-  memoizedCategories: any[];
+  memoizedCategories: string[];
   onRefresh: () => void;
   loadMoreNews: () => void;
   newsListRef: React.RefObject<FlatList<string>>;
   onScrollBeginDrag: (event: any) => void;
   onMomentumScrollEnd: (event: any) => void;
+  setSelectedCategory: (category: string) => void;
 }
 
 const NewsList: React.FC<NewsListProps> = ({
@@ -31,6 +31,7 @@ const NewsList: React.FC<NewsListProps> = ({
   newsListRef,
   onScrollBeginDrag,
   onMomentumScrollEnd,
+  setSelectedCategory,
 }) => {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const toastPosition = useSharedValue(-50);
@@ -52,9 +53,29 @@ const NewsList: React.FC<NewsListProps> = ({
     transform: [{ translateY: withTiming(toastPosition.value, { duration: 100 }) }],
   }));
 
+  const handleSeeMore = (categoryName: string) => {
+    const categoryIndex = memoizedCategories.findIndex(cat => cat === categoryName);
+    if (categoryIndex >= 0) {
+      setSelectedCategory(categoryName);
+      newsListRef.current?.scrollToIndex({ index: categoryIndex, animated: true });
+    }
+  };
+
   const renderCategoryContent = (category: string) => {
     if (category === 'All') {
-      return ({ item }: { item: NewsItemWp }) => <Text style={{ color: 'white', padding: 14 }}>{item.title}</Text>;
+      return ({ item }: { item: { categoryName: string; news: NewsItemWp[] } }) => (
+        <View style={{ marginBottom: 16 }}>
+          <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold', padding: 14 }}>{item.categoryName}</Text>
+          {item.news.map(newsItem => (
+            <Text key={newsItem.guid} style={{ color: 'white', padding: 14 }}>
+              {newsItem.title}
+            </Text>
+          ))}
+          <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
+            <Text style={styles.seeMoreText}>See more</Text>
+          </TouchableOpacity>
+        </View>
+      );
     }
     return ({ item, index }: { item: NewsItemWp; index: number }) => <NewsListItemComponent item={item} index={index} />;
   };
@@ -127,5 +148,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     lineHeight: 18,
+  },
+  seeMoreButton: {
+    padding: 10,
+    backgroundColor: '#555',
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  seeMoreText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
