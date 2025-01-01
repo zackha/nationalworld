@@ -46,7 +46,7 @@ export const fetchNews = async (page: number = 1, categoryId: number = 20, perPa
         link: item.link,
         description: item.excerpt.rendered,
         pubDate: item.date,
-        guid: `${item.id}`, // Benzersiz key sağlamak için string olarak dönüştürüldü
+        guid: `${item.id}`,
         creator: item.author,
         categories: item.categories,
         image: extractImageUrl(item.content.rendered),

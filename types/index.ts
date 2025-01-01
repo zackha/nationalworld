@@ -1,5 +1,5 @@
 // Haber veri tipi (WordPress)
-export type NewsItemWp = {
+export interface NewsItemWp {
   title: string;
   link: string;
   description: string;
@@ -8,9 +8,8 @@ export type NewsItemWp = {
   creator: number;
   categories: number[];
   image: string | null;
-};
+}
 
-// Haber veri tipi (WordPress API)
 export interface WPPost {
   id: number;
   title: { rendered: string };
@@ -27,10 +26,10 @@ export interface CategoryData {
   name: string;
 }
 
-export type AllCategoryNews = {
+export interface AllCategoryNews {
   categoryName: string;
   news: NewsItemWp[];
-};
+}
 
 export interface LoadingState {
   [key: string]: boolean;
@@ -38,4 +37,12 @@ export interface LoadingState {
 
 export interface NewsDataState {
   [key: string]: NewsItemWp[] | AllCategoryNews[];
+}
+
+export interface PaginationState {
+  [key: string]: number;
+}
+
+export interface HasMoreState {
+  [key: string]: boolean;
 }
