@@ -54,6 +54,13 @@ const NewsList: React.FC<NewsListProps> = ({
     transform: [{ translateY: withTiming(toastPosition.value, { duration: 100 }) }],
   }));
 
+  const renderCategoryContent = (category: string) => {
+    if (category === 'All') {
+      return ({ item }: { item: NewsItemWp }) => <Text style={{ color: 'white', padding: 14 }}>{item.title}</Text>;
+    }
+    return ({ item, index }: { item: NewsItemWp; index: number }) => <NewsListItemComponent item={item} index={index} />;
+  };
+
   return (
     <FlatList
       ref={newsListRef}
@@ -85,9 +92,7 @@ const NewsList: React.FC<NewsListProps> = ({
               maxToRenderPerBatch={6}
               data={newsData[item]}
               keyExtractor={newsItem => newsItem.guid}
-              renderItem={({ item, index }) => {
-                return selectedCategory === 'All' ? <Text style={{ padding: 14, color: 'white' }}>{item.title}</Text> : <NewsListItemComponent item={item} index={index} />;
-              }}
+              renderItem={renderCategoryContent(item)}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.newsList}
