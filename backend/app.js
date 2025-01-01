@@ -12216,7 +12216,7 @@ app.get('/wp-json/wp/v2/posts', (req, res) => {
 
   setTimeout(() => {
     res.json(paginatedPosts);
-  }, 3000);
+  }, 1000);
 });
 
 // Sunucuyu başlat
