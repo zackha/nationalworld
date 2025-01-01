@@ -21,6 +21,7 @@ export const extractImageUrl = (description: string): string | null => {
 };
 
 export const categoriesData = [
+  { id: 0, name: 'All' },
   { id: 20, name: 'News' },
   { id: 2, name: 'Headlines' },
   { id: 7, name: 'Sport' },

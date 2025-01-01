@@ -18,6 +18,7 @@ interface NewsListProps {
   newsListRef: React.RefObject<FlatList<string>>;
   onScrollBeginDrag: (event: any) => void;
   onMomentumScrollEnd: (event: any) => void;
+  selectedCategory: string;
 }
 
 const NewsList: React.FC<NewsListProps> = ({
@@ -31,6 +32,7 @@ const NewsList: React.FC<NewsListProps> = ({
   newsListRef,
   onScrollBeginDrag,
   onMomentumScrollEnd,
+  selectedCategory,
 }) => {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const toastPosition = useSharedValue(-50);
@@ -83,7 +85,9 @@ const NewsList: React.FC<NewsListProps> = ({
               maxToRenderPerBatch={6}
               data={newsData[item]}
               keyExtractor={newsItem => newsItem.guid}
-              renderItem={({ item, index }) => <NewsListItemComponent item={item} index={index} />}
+              renderItem={({ item, index }) => {
+                return selectedCategory === 'All' ? <Text style={{ padding: 14, color: 'white' }}>{item.title}</Text> : <NewsListItemComponent item={item} index={index} />;
+              }}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.newsList}

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { fetchNews } from '@/services/apiWp';
+import { fetchAllCategoryNews, fetchNews } from '@/services/apiWp';
 import type { NewsDataState, LoadingState } from '@/types';
 import { categoriesData } from '@/services/apiWp';
 
@@ -14,6 +14,14 @@ const useLoadNews = (selectedCategory: string) => {
       if (loading[categoryName] || hasMore[categoryName] === false) return;
       console.log(`\x1b[33m[LOADING] Fetching news for ${categoryName} (ID: ${categoryId}, Page: ${pageNumber})...\x1b[0m`);
       setLoading(prev => ({ ...prev, [categoryName]: true }));
+      if (categoryName === 'All') {
+        const newsItems = await fetchAllCategoryNews();
+        setNewsData(prev => ({
+          ...prev,
+          [categoryName]: pageNumber === 1 ? newsItems : [...(prev[categoryName] || []), ...newsItems],
+        }));
+        console.log(`All Category News: ${newsItems.length}`);
+      }
       try {
         const newsItems = await fetchNews(pageNumber, categoryId);
         console.log(`\x1b[32m[SUCCESS] Fetched ${newsItems.length} items for ${categoryName}\x1b[0m`);
