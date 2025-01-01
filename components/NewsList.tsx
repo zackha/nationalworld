@@ -53,6 +53,7 @@ const NewsList: React.FC<NewsListProps> = ({
     transform: [{ translateY: withTiming(toastPosition.value, { duration: 100 }) }],
   }));
 
+  // Handle navigation to a specific category
   const handleSeeMore = (categoryName: string) => {
     const categoryIndex = memoizedCategories.findIndex(cat => cat === categoryName);
     if (categoryIndex >= 0) {
@@ -81,8 +82,9 @@ const NewsList: React.FC<NewsListProps> = ({
     return category === 'All' ? renderAllCategoryItem : renderNewsItem;
   };
 
-  const keyExtractor = (newsItem: any, index: number) =>
-    memoizedCategories.includes('All') ? `${(newsItem as AllCategoryNews).categoryName}-${index}` : (newsItem as NewsItemWp).guid;
+  const keyExtractor = (newsItem: AllCategoryNews | NewsItemWp, index: number) => {
+    return memoizedCategories.includes('All') ? `${(newsItem as AllCategoryNews).categoryName}-${index}` : (newsItem as NewsItemWp).guid;
+  };
 
   return (
     <FlatList
