@@ -50,7 +50,7 @@ export const fetchNews = async (page: number = 1, categoryId: number = 20, perPa
         guid: `${item.id}`,
         creator: item.author,
         categories: item.categories,
-        image: extractImageUrl(item.content.rendered) || '',
+        image: extractImageUrl(item.content.rendered) || 'https://placehold.co/1024x768.png',
       }))
     );
 };

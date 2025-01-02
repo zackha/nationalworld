@@ -1,3 +1,5 @@
+import { FlatList } from 'react-native';
+
 export interface NewsItemWp {
   title: string;
   link: string;
@@ -44,4 +46,25 @@ export interface PaginationState {
 
 export interface HasMoreState {
   [key: string]: boolean;
+}
+
+export interface AllCategoryItemProps {
+  item: AllCategoryNews;
+  memoizedCategories: string[];
+  newsListRef: React.RefObject<FlatList<string>>;
+  setSelectedCategory: (category: string) => void;
+}
+
+export interface NewsListProps {
+  newsData: NewsDataState;
+  loading: LoadingState;
+  hasMore: LoadingState;
+  refreshing: boolean;
+  memoizedCategories: string[];
+  onRefresh: () => void;
+  loadMoreNews: () => void;
+  newsListRef: React.RefObject<FlatList<string>>;
+  onScrollBeginDrag: (event: any) => void;
+  onMomentumScrollEnd: (event: any) => void;
+  setSelectedCategory: (category: string) => void;
 }

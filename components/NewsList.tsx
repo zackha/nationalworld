@@ -1,24 +1,11 @@
 import { useState, useEffect } from 'react';
-import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import screenWidth from '@/utils/dimensions';
-import type { NewsItemWp, NewsDataState, LoadingState, AllCategoryNews } from '@/types';
+import type { NewsItemWp, NewsListProps, AllCategoryNews } from '@/types';
 import { NewsListItemComponent } from '@/components/NewsListItem';
 import { BlurView } from 'expo-blur';
-
-interface NewsListProps {
-  newsData: NewsDataState;
-  loading: LoadingState;
-  hasMore: LoadingState;
-  refreshing: boolean;
-  memoizedCategories: string[];
-  onRefresh: () => void;
-  loadMoreNews: () => void;
-  newsListRef: React.RefObject<FlatList<string>>;
-  onScrollBeginDrag: (event: any) => void;
-  onMomentumScrollEnd: (event: any) => void;
-  setSelectedCategory: (category: string) => void;
-}
+import { AllCategoryItemComponent } from './AllCategoryItem';
 
 const NewsList: React.FC<NewsListProps> = ({
   newsData,
@@ -53,26 +40,8 @@ const NewsList: React.FC<NewsListProps> = ({
     transform: [{ translateY: withTiming(toastPosition.value, { duration: 100 }) }],
   }));
 
-  const handleSeeMore = (categoryName: string) => {
-    const categoryIndex = memoizedCategories.indexOf(categoryName);
-    if (categoryIndex >= 0) {
-      setSelectedCategory(categoryName);
-      newsListRef.current?.scrollToIndex({ index: categoryIndex, animated: true });
-    }
-  };
-
   const renderAllCategoryItem = ({ item }: { item: AllCategoryNews }) => (
-    <View style={{ marginBottom: 16 }}>
-      <Text style={styles.categoryTitle}>{item.categoryName}</Text>
-      {item.news.map(newsItem => (
-        <Text key={newsItem.guid} style={styles.newsTitle}>
-          {newsItem.title}
-        </Text>
-      ))}
-      <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
-        <Text style={styles.seeMoreText}>See more</Text>
-      </TouchableOpacity>
-    </View>
+    <AllCategoryItemComponent item={item} memoizedCategories={memoizedCategories} newsListRef={newsListRef} setSelectedCategory={setSelectedCategory} />
   );
 
   const renderNewsItem = ({ item, index }: { item: NewsItemWp; index: number }) => <NewsListItemComponent item={item} index={index} />;
@@ -149,27 +118,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     lineHeight: 18,
-  },
-  seeMoreButton: {
-    padding: 10,
-    backgroundColor: '#555',
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  seeMoreText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  categoryTitle: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-    padding: 14,
-  },
-  newsTitle: {
-    color: 'white',
-    padding: 14,
   },
 });
