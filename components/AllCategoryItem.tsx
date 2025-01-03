@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground, ViewBase } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import type { AllCategoryItemProps } from '@/types';
 import styles from '@/styles/styles';
 import { decodeHTML } from 'entities';
@@ -7,8 +7,8 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import { LinearGradient } from 'expo-linear-gradient';
-import { categoriesData } from '@/services/apiWp';
 import Octicons from '@expo/vector-icons/Octicons';
+import { ArticleFour, ArticleOne, ArticleThree, ArticleTwo } from '@/components/ArticleItems';
 
 export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item, memoizedCategories, newsListRef, setSelectedCategory, index }) => {
   const handleSeeMore = useCallback(
@@ -61,61 +61,13 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
       )}
       {item.news.map((newsItem, index) => {
         if (index === 0) {
-          return (
-            <View key={newsItem.guid}>
-              <Image source={{ uri: newsItem.image }} style={styles.articleOneImage} />
-              <View style={styles.articleOneContent}>
-                <Text style={styles.articleOneTitle}>{decodeHTML(newsItem.title)}</Text>
-                <Text style={styles.articleDescription}>{decodeHTML(newsItem.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-                <View style={styles.articleMetaInfo}>
-                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                  <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-                </View>
-              </View>
-            </View>
-          );
+          return <ArticleOne key={newsItem.guid} {...newsItem} />;
         } else if (index === 1 || index === 2) {
-          return (
-            <View key={newsItem.guid} style={styles.articleTwoContainer}>
-              <Image source={{ uri: newsItem.image }} style={styles.articleTwoImage} />
-              <View style={styles.articleTwoContent}>
-                <Text style={styles.articleTitle}>{decodeHTML(newsItem.title)}</Text>
-                <View style={styles.articleMetaInfo}>
-                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                  <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-                </View>
-              </View>
-            </View>
-          );
+          return <ArticleTwo key={newsItem.guid} {...newsItem} />;
         } else if (index >= 3 && index <= 5) {
-          return (
-            <View key={newsItem.guid} style={styles.articleThreeContainer}>
-              <Text style={styles.articleTitle}>{decodeHTML(newsItem.title)}</Text>
-              <Text style={styles.articleDescription}>{decodeHTML(newsItem.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-              <View style={styles.articleMetaInfo}>
-                <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                <View style={styles.articleMetaInfoDivider} />
-                <Text style={styles.articleMetaInfoText}>{newsItem.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-              </View>
-            </View>
-          );
+          return <ArticleThree key={newsItem.guid} {...newsItem} />;
         } else {
-          return (
-            <View key={newsItem.guid} style={styles.articleThreeContainer}>
-              <Image source={{ uri: newsItem.image }} style={styles.articleOneImage} />
-              <View style={styles.articleTwoContent}>
-                <Text style={styles.articleTitle}>{decodeHTML(newsItem.title)}</Text>
-                <Text style={styles.articleDescription}>{decodeHTML(newsItem.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-                <View style={styles.articleMetaInfo}>
-                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                  <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>{newsItem.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-                </View>
-              </View>
-            </View>
-          );
+          return <ArticleFour key={newsItem.guid} {...newsItem} />;
         }
       })}
       <TouchableOpacity

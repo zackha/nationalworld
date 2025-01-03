@@ -63,7 +63,7 @@ export const fetchAllCategoryNews = async (): Promise<AllCategoryNews[]> => {
     { id: 33246, name: 'Business Crack', perPage: 7 },
     { id: 7, name: 'Sport', perPage: 5 },
     { id: 33187, name: 'Sponsored', perPage: 5 },
-    { id: 51, name: "What's on", perPage: 5 },
+    //{ id: 51, name: "What's on", perPage: 5 },
   ];
 
   const fetchPromises = predefinedCategories.map(async category => {
