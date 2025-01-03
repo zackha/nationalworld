@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
-import { View, Text, Image } from 'react-native';
+import { useEffect, memo } from 'react';
+import { View, Text } from 'react-native';
+import { Image } from 'expo-image';
 import { decodeHTML } from 'entities';
 import type { NewsItemWp } from '@/types';
 import dayjs from 'dayjs';
@@ -9,7 +10,7 @@ import styles from '@/styles/styles';
 import { categoriesData } from '@/services/apiWp';
 dayjs.extend(relativeTime);
 
-export const ArticleOne = (item: NewsItemWp) => {
+export const ArticleOne = memo((item: NewsItemWp) => {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ export const ArticleOne = (item: NewsItemWp) => {
 
   return (
     <Animated.View style={animatedStyle}>
-      <Image source={{ uri: item.image }} style={styles.articleOneImage} />
+      <Image source={item.image} style={styles.articleOneImage} />
       <View style={styles.articleOneContent}>
         <Text style={styles.articleOneTitle}>{decodeHTML(item.title)}</Text>
         <Text style={styles.articleDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
@@ -34,9 +35,9 @@ export const ArticleOne = (item: NewsItemWp) => {
       </View>
     </Animated.View>
   );
-};
+});
 
-export const ArticleTwo = (item: NewsItemWp) => {
+export const ArticleTwo = memo((item: NewsItemWp) => {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export const ArticleTwo = (item: NewsItemWp) => {
 
   return (
     <Animated.View style={[styles.articleTwoContainer, animatedStyle]}>
-      <Image source={{ uri: item.image }} style={styles.articleTwoImage} />
+      <Image source={item.image} style={styles.articleTwoImage} />
       <View style={styles.articleTwoContent}>
         <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
         <View style={styles.articleMetaInfo}>
@@ -60,9 +61,9 @@ export const ArticleTwo = (item: NewsItemWp) => {
       </View>
     </Animated.View>
   );
-};
+});
 
-export const ArticleThree = (item: NewsItemWp) => {
+export const ArticleThree = memo((item: NewsItemWp) => {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
@@ -84,9 +85,9 @@ export const ArticleThree = (item: NewsItemWp) => {
       </View>
     </Animated.View>
   );
-};
+});
 
-export const ArticleFour = (item: NewsItemWp) => {
+export const ArticleFour = memo((item: NewsItemWp) => {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
@@ -99,7 +100,7 @@ export const ArticleFour = (item: NewsItemWp) => {
 
   return (
     <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
-      <Image source={{ uri: item.image }} style={styles.articleOneImage} />
+      <Image source={item.image} style={styles.articleOneImage} />
       <View style={styles.articleTwoContent}>
         <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
         <Text style={styles.articleDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
@@ -111,9 +112,9 @@ export const ArticleFour = (item: NewsItemWp) => {
       </View>
     </Animated.View>
   );
-};
+});
 
-export const ArticleFive = (item: NewsItemWp) => {
+export const ArticleFive = memo((item: NewsItemWp) => {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
@@ -128,7 +129,7 @@ export const ArticleFive = (item: NewsItemWp) => {
     <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
       <View style={styles.articleFourContent}>
         <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
-        <Image source={{ uri: item.image }} style={styles.articleFourImage} />
+        <Image source={item.image} style={styles.articleFourImage} />
       </View>
       <Text style={styles.articleDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
       <View style={styles.articleMetaInfo}>
@@ -138,4 +139,4 @@ export const ArticleFive = (item: NewsItemWp) => {
       </View>
     </Animated.View>
   );
-};
+});
