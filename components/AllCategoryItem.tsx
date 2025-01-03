@@ -8,6 +8,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import { LinearGradient } from 'expo-linear-gradient';
 import { categoriesData } from '@/services/apiWp';
+import Octicons from '@expo/vector-icons/Octicons';
 
 export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item, memoizedCategories, newsListRef, setSelectedCategory, index }) => {
   const handleSeeMore = useCallback(
@@ -31,11 +32,12 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
           {item.news.map((newsItem, idx) => (
             <View key={newsItem.guid} style={[styles.customArticleItem, idx === 0 && { marginLeft: 14 }]}>
               <ImageBackground source={{ uri: newsItem.image }} style={styles.customArticleImage}>
-                <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.customArticleGradient} />
-                <View style={styles.customArticleContent}>
-                  <Text style={styles.customArticleTitle}>{decodeHTML(newsItem.title)}</Text>
-                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                </View>
+                <LinearGradient colors={['transparent', 'rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0.4)', 'rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.8)']}>
+                  <View style={styles.customArticleContent}>
+                    <Text style={styles.customArticleTitle}>{decodeHTML(newsItem.title)}</Text>
+                    <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
+                  </View>
+                </LinearGradient>
               </ImageBackground>
             </View>
           ))}
@@ -95,7 +97,14 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
           );
         }
       })}
-      {item.categoryName !== 'All' && (
+      {item.categoryName === 'All' ? (
+        <TouchableOpacity
+          style={{ marginHorizontal: 14, flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 12 }}
+          onPress={() => handleSeeMore(item.categoryName)}>
+          <Text style={{ fontFamily: 'BBCReithSerifBd', color: 'white', fontSize: 16, lineHeight: 18 }}>More latest news</Text>
+          <Octicons name="arrow-right" size={22} color="white" />
+        </TouchableOpacity>
+      ) : (
         <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
           <Text style={styles.seeMoreText}>More {item.categoryName}</Text>
         </TouchableOpacity>

@@ -130,11 +130,6 @@ const styles = StyleSheet.create({
     fontFamily: 'BBCReithSansMd',
     color: '#fff',
   },
-  customArticleGradient: {
-    width: '100%',
-    height: '60%',
-    position: 'absolute',
-  },
   customArticleContent: {
     padding: 14,
     gap: 6,
