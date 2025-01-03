@@ -25,9 +25,10 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
   if (index === 1) {
     return (
       <View style={styles.customArticleContainer}>
-        <Text style={{ fontFamily: 'BBCReithSerifBd', fontSize: 16, color: 'white', marginHorizontal: 14, paddingBottom: 8, borderBottomColor: '#393b40', borderBottomWidth: 1 }}>
-          Stories from {item.categoryName}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 14, gap: 14 }}>
+          <View style={{ width: 4, height: 16, backgroundColor: 'red' }} />
+          <Text style={{ fontFamily: 'BBCReithSerifBd', fontSize: 16, color: 'white' }}>Stories from {item.categoryName}</Text>
+        </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {item.news.map((newsItem, idx) => (
             <View key={newsItem.guid} style={[styles.customArticleItem, idx === 0 && { marginLeft: 14 }]}>
@@ -55,7 +56,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
     <View>
       {item.categoryName !== 'Latest News' && (
         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 14, gap: 14, backgroundColor: '#0d0d0d', borderTopWidth: 6, borderTopColor: '#262626' }}>
-          <View style={{ width: 8, height: 38, backgroundColor: 'red' }}></View>
+          <View style={{ width: 8, height: 38, backgroundColor: 'red' }} />
           <Text style={{ color: 'white', fontFamily: 'BBCReithSerifBd', fontSize: 38 }}>{item.categoryName}</Text>
         </View>
       )}
@@ -70,9 +71,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
           return <ArticleFour key={newsItem.guid} {...newsItem} />;
         }
       })}
-      <TouchableOpacity
-        style={{ marginHorizontal: 14, flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 12 }}
-        onPress={() => handleSeeMore(item.categoryName === 'Latest News' ? 'News' : item.categoryName)}>
+      <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName === 'Latest News' ? 'News' : item.categoryName)}>
         <Text style={styles.seeMoreText}>
           More <Text style={{ textTransform: 'lowercase' }}>{item.categoryName}</Text>
         </Text>

@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     fontFamily: 'BBCReithSansRg',
   },
   articleMetaInfoDivider: {
-    height: '80%',
+    height: 14,
     width: 1,
     backgroundColor: '#fff',
     marginHorizontal: 4,
@@ -90,12 +90,11 @@ const styles = StyleSheet.create({
   },
 
   seeMoreButton: {
-    padding: 10,
+    marginHorizontal: 14,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'white',
-    margin: 14,
+    gap: 8,
+    paddingVertical: 12,
   },
   seeMoreText: {
     fontFamily: 'BBCReithSerifBd',
@@ -108,6 +107,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#151618',
     paddingVertical: 14,
     gap: 14,
+    borderTopWidth: 6,
+    borderTopColor: '#262626',
   },
   customArticleItem: {
     marginRight: 14,
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   customArticleSeeMoreButton: {
-    backgroundColor: '#26272a',
+    backgroundColor: '#262626',
     height: hp(40),
     justifyContent: 'center',
     alignItems: 'center',
