@@ -1,13 +1,16 @@
 import { useEffect } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { decodeHTML } from 'entities';
-import type { Props } from '@/types';
+import type { NewsItemWp } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import styles from '@/styles/styles';
+import { categoriesData } from '@/services/apiWp';
 dayjs.extend(relativeTime);
+const randomRangeEnd = 1 + (Math.random() < 0.5 ? 2 : 3);
 
-export const NewsListItemComponent = ({ item, index }: Props & { index: number }) => {
+export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index: number }) => {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
@@ -22,18 +25,18 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
     return (
       <Animated.View style={animatedStyle}>
         <Image source={{ uri: item.image }} style={styles.articleOneImage} />
-        <View style={styles.articleOneDescription}>
+        <View style={styles.articleOneContent}>
           <Text style={styles.articleOneTitle}>{decodeHTML(item.title)}</Text>
           <Text style={styles.articleDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>World</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
           </View>
         </View>
       </Animated.View>
     );
-  } else if (index >= 1 && index <= 3) {
+  } else if (index > 0 && index <= randomRangeEnd) {
     return (
       <Animated.View style={[styles.articleTwoContainer, animatedStyle]}>
         <Image source={{ uri: item.image }} style={styles.articleTwoImage} />
@@ -42,12 +45,12 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>World</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
           </View>
         </View>
       </Animated.View>
     );
-  } else if (index === 4) {
+  } else if (index === randomRangeEnd + 1) {
     return (
       <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <Image source={{ uri: item.image }} style={styles.articleOneImage} />
@@ -57,12 +60,12 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>World</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
           </View>
         </View>
       </Animated.View>
     );
-  } else if (index === 5 || index === 6) {
+  } else if (index === randomRangeEnd + 2 || index === randomRangeEnd + 3) {
     return (
       <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
@@ -70,11 +73,11 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
         <View style={styles.articleMetaInfo}>
           <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
           <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>World</Text>
+          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
         </View>
       </Animated.View>
     );
-  } else if (index >= 7 && index <= 20) {
+  } else if (index > randomRangeEnd + 3 && index <= 20) {
     return (
       <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <Image source={{ uri: item.image }} style={styles.articleOneImage} />
@@ -84,7 +87,7 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>World</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
           </View>
         </View>
       </Animated.View>
@@ -100,99 +103,9 @@ export const NewsListItemComponent = ({ item, index }: Props & { index: number }
         <View style={styles.articleMetaInfo}>
           <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
           <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>World</Text>
+          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
         </View>
       </Animated.View>
     );
   }
 };
-
-const styles = StyleSheet.create({
-  articleOneImage: {
-    width: '100%',
-    height: 215,
-    backgroundColor: '#262626',
-  },
-  articleOneDescription: {
-    margin: 14,
-    marginBottom: 0,
-    gap: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingBottom: 12,
-  },
-  articleOneTitle: {
-    fontSize: 24,
-    color: '#fff',
-    fontFamily: 'BBCReithSerifMd',
-    letterSpacing: -0.8,
-  },
-  articleDescription: {
-    fontSize: 14,
-    color: '#fff',
-    fontFamily: 'BBCReithSerifRg',
-  },
-  articleTwoContainer: {
-    flexDirection: 'row',
-    marginHorizontal: 14,
-    gap: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    paddingVertical: 14,
-  },
-  articleTwoImage: {
-    height: 80,
-    width: '35%',
-    objectFit: 'cover',
-    backgroundColor: '#262626',
-  },
-  articleTwoContent: {
-    flex: 1,
-    gap: 6,
-  },
-  articleTitle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    fontFamily: 'BBCReithSerifMd',
-    letterSpacing: -0.8,
-  },
-  articleTwoDescription: {
-    fontSize: 12,
-    color: '#fff',
-  },
-  articleThreeContainer: {
-    marginHorizontal: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    paddingVertical: 14,
-    gap: 8,
-  },
-  articleMetaInfo: {
-    marginTop: 8,
-    flexDirection: 'row',
-    gap: 8,
-    alignItems: 'center',
-  },
-  articleMetaInfoText: {
-    fontSize: 12,
-    color: '#999',
-    fontFamily: 'BBCReithSansRg',
-  },
-  articleMetaInfoDivider: {
-    height: '80%',
-    width: 1,
-    backgroundColor: '#fff',
-    marginHorizontal: 4,
-  },
-  articleFourImage: {
-    width: '50%',
-    height: 110,
-    backgroundColor: '#262626',
-  },
-  articleFourContent: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});

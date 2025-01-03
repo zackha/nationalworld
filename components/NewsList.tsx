@@ -1,24 +1,11 @@
 import { useState, useEffect } from 'react';
-import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import screenWidth from '@/utils/dimensions';
-import type { NewsItemWp, NewsDataState, LoadingState, AllCategoryNews } from '@/types';
+import { wp } from '@/utils/dimensions';
+import type { NewsItemWp, NewsListProps, AllCategoryNews } from '@/types';
 import { NewsListItemComponent } from '@/components/NewsListItem';
 import { BlurView } from 'expo-blur';
-
-interface NewsListProps {
-  newsData: NewsDataState;
-  loading: LoadingState;
-  hasMore: LoadingState;
-  refreshing: boolean;
-  memoizedCategories: string[];
-  onRefresh: () => void;
-  loadMoreNews: () => void;
-  newsListRef: React.RefObject<FlatList<string>>;
-  onScrollBeginDrag: (event: any) => void;
-  onMomentumScrollEnd: (event: any) => void;
-  setSelectedCategory: (category: string) => void;
-}
+import { AllCategoryItemComponent } from './AllCategoryItem';
 
 const NewsList: React.FC<NewsListProps> = ({
   newsData,
@@ -53,32 +40,14 @@ const NewsList: React.FC<NewsListProps> = ({
     transform: [{ translateY: withTiming(toastPosition.value, { duration: 100 }) }],
   }));
 
-  const handleSeeMore = (categoryName: string) => {
-    const categoryIndex = memoizedCategories.indexOf(categoryName);
-    if (categoryIndex >= 0) {
-      setSelectedCategory(categoryName);
-      newsListRef.current?.scrollToIndex({ index: categoryIndex, animated: true });
-    }
-  };
-
-  const renderAllCategoryItem = ({ item }: { item: AllCategoryNews }) => (
-    <View style={{ marginBottom: 16 }}>
-      <Text style={styles.categoryTitle}>{item.categoryName}</Text>
-      {item.news.map(newsItem => (
-        <Text key={newsItem.guid} style={styles.newsTitle}>
-          {newsItem.title}
-        </Text>
-      ))}
-      <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
-        <Text style={styles.seeMoreText}>See more</Text>
-      </TouchableOpacity>
-    </View>
+  const renderAllCategoryItem = ({ item, index }: { item: AllCategoryNews; index: number }) => (
+    <AllCategoryItemComponent item={item} index={index} memoizedCategories={memoizedCategories} newsListRef={newsListRef} setSelectedCategory={setSelectedCategory} />
   );
 
   const renderNewsItem = ({ item, index }: { item: NewsItemWp; index: number }) => <NewsListItemComponent item={item} index={index} />;
 
   const renderItem = ({ item, index }: { item: AllCategoryNews | NewsItemWp; index: number }) =>
-    'categoryName' in item ? renderAllCategoryItem({ item }) : renderNewsItem({ item, index });
+    'categoryName' in item ? renderAllCategoryItem({ item, index }) : renderNewsItem({ item, index });
 
   const keyExtractor = (item: AllCategoryNews | NewsItemWp, index: number) => ('categoryName' in item ? `${item.categoryName}-${index}` : item.guid);
 
@@ -90,11 +59,11 @@ const NewsList: React.FC<NewsListProps> = ({
       pagingEnabled
       showsHorizontalScrollIndicator={false}
       keyExtractor={item => item}
-      getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
+      getItemLayout={(data, index) => ({ length: wp(100), offset: wp(100) * index, index })}
       onScrollBeginDrag={onScrollBeginDrag}
       onMomentumScrollEnd={onMomentumScrollEnd}
       renderItem={({ item }) => (
-        <View style={{ width: screenWidth }}>
+        <View style={{ width: wp(100) }}>
           {lastUpdated && (
             <Animated.View style={[styles.lastUpdatedContainer, toastStyle]}>
               <BlurView intensity={70} style={styles.blurContainer}>
@@ -149,27 +118,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     lineHeight: 18,
-  },
-  seeMoreButton: {
-    padding: 10,
-    backgroundColor: '#555',
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  seeMoreText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  categoryTitle: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-    padding: 14,
-  },
-  newsTitle: {
-    color: 'white',
-    padding: 14,
   },
 });

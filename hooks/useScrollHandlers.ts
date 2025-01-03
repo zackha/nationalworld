@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { NativeSyntheticEvent, NativeScrollEvent, FlatList } from 'react-native';
 import { categoriesData } from '@/services/apiWp';
-import screenWidth from '@/utils/dimensions';
+import { wp } from '@/utils/dimensions';
 import type { NewsDataState } from '@/types';
 
 const useScrollHandlers = (newsData: NewsDataState, loadNews: (categoryId: number, categoryName: string) => Promise<void>, setSelectedCategory: Function) => {
@@ -9,7 +9,7 @@ const useScrollHandlers = (newsData: NewsDataState, loadNews: (categoryId: numbe
   const onScrollBeginDrag = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const offsetX = event.nativeEvent.contentOffset.x;
-      const currentIndex = Math.round(offsetX / screenWidth);
+      const currentIndex = Math.round(offsetX / wp(100));
       const nextIndex = currentIndex + 1;
       const previousIndex = currentIndex - 1;
 
@@ -32,7 +32,7 @@ const useScrollHandlers = (newsData: NewsDataState, loadNews: (categoryId: numbe
 
   const onMomentumScrollEnd = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+      const index = Math.round(event.nativeEvent.contentOffset.x / wp(100));
       setSelectedCategory(categoriesData[index].name);
       flatListRef.current?.scrollToIndex({ index, animated: true });
     },

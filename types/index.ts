@@ -1,4 +1,5 @@
-// Haber veri tipi (WordPress)
+import { FlatList } from 'react-native';
+
 export interface NewsItemWp {
   title: string;
   link: string;
@@ -7,7 +8,7 @@ export interface NewsItemWp {
   guid: string;
   creator: number;
   categories: number[];
-  image: string | null;
+  image: string;
 }
 
 export interface WPPost {
@@ -45,4 +46,26 @@ export interface PaginationState {
 
 export interface HasMoreState {
   [key: string]: boolean;
+}
+
+export interface AllCategoryItemProps {
+  item: AllCategoryNews;
+  memoizedCategories: string[];
+  newsListRef: React.RefObject<FlatList<string>>;
+  setSelectedCategory: (category: string) => void;
+  index: number;
+}
+
+export interface NewsListProps {
+  newsData: NewsDataState;
+  loading: LoadingState;
+  hasMore: LoadingState;
+  refreshing: boolean;
+  memoizedCategories: string[];
+  onRefresh: () => void;
+  loadMoreNews: () => void;
+  newsListRef: React.RefObject<FlatList<string>>;
+  onScrollBeginDrag: (event: any) => void;
+  onMomentumScrollEnd: (event: any) => void;
+  setSelectedCategory: (category: string) => void;
 }

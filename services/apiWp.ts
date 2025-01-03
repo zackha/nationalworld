@@ -14,7 +14,8 @@ const api = wretch(API_WP).options({
 //    .get()
 //    .json(result => result.media_details?.sizes?.medium_large?.source_url);
 //};
-export const extractImageUrl = (description: string): string | null => {
+
+export const extractImageUrl = (description: string) => {
   const match = description.match(/https?:\/\/[^\s]+(?=\s768w|748w)|<img[^>]+src="([^"]+)"/);
   return match ? match[1] || match[0] : null;
 };
@@ -37,8 +38,10 @@ export const categoriesData: CategoryData[] = [
 ];
 
 export const fetchNews = async (page: number = 1, categoryId: number = 20, perPage: number = 21): Promise<NewsItemWp[]> => {
+  const url = `/wp-json/wp/v2/posts?order_by=date&per_page=${perPage}&page=${page}${categoryId && categoryId !== 0 ? `&categories=${categoryId}` : ''}`;
+  console.log(`\x1b[1m\x1b[33m[Fetching URL]\x1b[0m\x1b[33m ${API_WP}${url}\x1b[0m`);
   return api
-    .url(`/wp-json/wp/v2/posts?order_by=date&per_page=${perPage}&page=${page}&categories=${categoryId}`)
+    .url(url)
     .get()
     .json((result: WPPost[]) =>
       result.map(item => ({
@@ -49,15 +52,18 @@ export const fetchNews = async (page: number = 1, categoryId: number = 20, perPa
         guid: `${item.id}`,
         creator: item.author,
         categories: item.categories,
-        image: extractImageUrl(item.content.rendered),
+        image: extractImageUrl(item.content.rendered) || 'https://placehold.co/1024x768.png',
       }))
     );
 };
 
 export const fetchAllCategoryNews = async (): Promise<AllCategoryNews[]> => {
   const predefinedCategories = [
-    { id: 7, name: 'Sport', perPage: 2 },
-    { id: 33246, name: 'Business Crack', perPage: 2 },
+    { id: 0, name: 'Latest News', perPage: 8 },
+    { id: 33246, name: 'Business Crack', perPage: 7 },
+    { id: 7, name: 'Sport', perPage: 5 },
+    { id: 33187, name: 'Sponsored', perPage: 5 },
+    { id: 51, name: "What's on", perPage: 5 },
   ];
 
   const fetchPromises = predefinedCategories.map(async category => {
