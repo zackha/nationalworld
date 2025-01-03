@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground, ViewBase } from 'react-native';
 import type { AllCategoryItemProps } from '@/types';
 import styles from '@/styles/styles';
 import { decodeHTML } from 'entities';
@@ -22,10 +22,10 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
     [memoizedCategories, newsListRef, setSelectedCategory]
   );
 
-  if (index === 2) {
+  if (index === 1) {
     return (
       <View style={styles.customArticleContainer}>
-        <Text style={{ fontFamily: 'BBCReithSerifBd', fontSize: 16, color: 'white', marginHorizontal: 14, paddingBottom: 7, borderBottomColor: '#393b40', borderBottomWidth: 1 }}>
+        <Text style={{ fontFamily: 'BBCReithSerifBd', fontSize: 16, color: 'white', marginHorizontal: 14, paddingBottom: 8, borderBottomColor: '#393b40', borderBottomWidth: 1 }}>
           Stories from {item.categoryName}
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -42,7 +42,8 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
           ))}
           <View style={styles.customArticleItem}>
             <TouchableOpacity style={styles.customArticleSeeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
-              <Text style={styles.customArticleSeeMoreText}>See More</Text>
+              <Text style={styles.seeMoreText}>See more</Text>
+              <Octicons name="arrow-right" size={22} color="white" />
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -52,6 +53,12 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
 
   return (
     <View>
+      {item.categoryName !== 'Latest News' && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 14, gap: 14, backgroundColor: '#0d0d0d', borderTopWidth: 6, borderTopColor: '#262626' }}>
+          <View style={{ width: 8, height: 38, backgroundColor: 'red' }}></View>
+          <Text style={{ color: 'white', fontFamily: 'BBCReithSerifBd', fontSize: 38 }}>{item.categoryName}</Text>
+        </View>
+      )}
       {item.news.map((newsItem, index) => {
         if (index === 0) {
           return (
@@ -111,18 +118,14 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
           );
         }
       })}
-      {item.categoryName === 'All' ? (
-        <TouchableOpacity
-          style={{ marginHorizontal: 14, flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 12 }}
-          onPress={() => handleSeeMore(item.categoryName)}>
-          <Text style={{ fontFamily: 'BBCReithSerifBd', color: 'white', fontSize: 16, lineHeight: 18 }}>More latest news</Text>
-          <Octicons name="arrow-right" size={22} color="white" />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
-          <Text style={styles.seeMoreText}>More {item.categoryName}</Text>
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity
+        style={{ marginHorizontal: 14, flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 12 }}
+        onPress={() => handleSeeMore(item.categoryName === 'Latest News' ? 'News' : item.categoryName)}>
+        <Text style={styles.seeMoreText}>
+          More <Text style={{ textTransform: 'lowercase' }}>{item.categoryName}</Text>
+        </Text>
+        <Octicons name="arrow-right" size={22} color="white" />
+      </TouchableOpacity>
     </View>
   );
 };

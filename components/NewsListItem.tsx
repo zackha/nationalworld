@@ -8,6 +8,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-na
 import styles from '@/styles/styles';
 import { categoriesData } from '@/services/apiWp';
 dayjs.extend(relativeTime);
+const randomRangeEnd = 1 + (Math.random() < 0.5 ? 2 : 3);
 
 export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index: number }) => {
   const opacity = useSharedValue(0);
@@ -35,7 +36,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
         </View>
       </Animated.View>
     );
-  } else if (index >= 1 && index <= 3) {
+  } else if (index > 0 && index <= randomRangeEnd) {
     return (
       <Animated.View style={[styles.articleTwoContainer, animatedStyle]}>
         <Image source={{ uri: item.image }} style={styles.articleTwoImage} />
@@ -49,7 +50,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
         </View>
       </Animated.View>
     );
-  } else if (index === 4) {
+  } else if (index === randomRangeEnd + 1) {
     return (
       <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <Image source={{ uri: item.image }} style={styles.articleOneImage} />
@@ -64,7 +65,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
         </View>
       </Animated.View>
     );
-  } else if (index === 5 || index === 6) {
+  } else if (index === randomRangeEnd + 2 || index === randomRangeEnd + 3) {
     return (
       <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <Text style={styles.articleTitle}>{decodeHTML(item.title)}</Text>
@@ -76,7 +77,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
         </View>
       </Animated.View>
     );
-  } else if (index >= 7 && index <= 20) {
+  } else if (index > randomRangeEnd + 3 && index <= 20) {
     return (
       <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
         <Image source={{ uri: item.image }} style={styles.articleOneImage} />

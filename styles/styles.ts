@@ -98,14 +98,14 @@ const styles = StyleSheet.create({
     margin: 14,
   },
   seeMoreText: {
+    fontFamily: 'BBCReithSerifBd',
     color: 'white',
     fontSize: 16,
-    fontFamily: 'BBCReithSansMd',
+    lineHeight: 18,
   },
 
   customArticleContainer: {
     backgroundColor: '#151618',
-    marginBottom: 14,
     paddingVertical: 14,
     gap: 14,
   },
@@ -120,14 +120,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   customArticleSeeMoreButton: {
-    backgroundColor: '#393b40',
+    backgroundColor: '#26272a',
     height: hp(40),
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  customArticleSeeMoreText: {
-    fontFamily: 'BBCReithSansMd',
-    color: '#fff',
   },
   customArticleGradient: {
     width: '100%',

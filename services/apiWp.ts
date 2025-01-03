@@ -59,10 +59,11 @@ export const fetchNews = async (page: number = 1, categoryId: number = 20, perPa
 
 export const fetchAllCategoryNews = async (): Promise<AllCategoryNews[]> => {
   const predefinedCategories = [
-    { id: 0, name: 'All', perPage: 13 },
-    { id: 7, name: 'Sport', perPage: 5 },
+    { id: 0, name: 'Latest News', perPage: 8 },
     { id: 33246, name: 'Business Crack', perPage: 7 },
+    { id: 7, name: 'Sport', perPage: 5 },
     { id: 33187, name: 'Sponsored', perPage: 5 },
+    { id: 51, name: "What's on", perPage: 5 },
   ];
 
   const fetchPromises = predefinedCategories.map(async category => {
