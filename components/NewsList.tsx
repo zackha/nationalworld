@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { screenWidth } from '@/utils/dimensions';
+import { wp } from '@/utils/dimensions';
 import type { NewsItemWp, NewsListProps, AllCategoryNews } from '@/types';
 import { NewsListItemComponent } from '@/components/NewsListItem';
 import { BlurView } from 'expo-blur';
@@ -59,11 +59,11 @@ const NewsList: React.FC<NewsListProps> = ({
       pagingEnabled
       showsHorizontalScrollIndicator={false}
       keyExtractor={item => item}
-      getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
+      getItemLayout={(data, index) => ({ length: wp(100), offset: wp(100) * index, index })}
       onScrollBeginDrag={onScrollBeginDrag}
       onMomentumScrollEnd={onMomentumScrollEnd}
       renderItem={({ item }) => (
-        <View style={{ width: screenWidth }}>
+        <View style={{ width: wp(100) }}>
           {lastUpdated && (
             <Animated.View style={[styles.lastUpdatedContainer, toastStyle]}>
               <BlurView intensity={70} style={styles.blurContainer}>
