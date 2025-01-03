@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import styles from '@/styles/styles';
+import { categoriesData } from '@/services/apiWp';
 dayjs.extend(relativeTime);
 
 export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index: number }) => {
@@ -29,7 +30,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
           </View>
         </View>
       </Animated.View>
@@ -43,7 +44,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
           </View>
         </View>
       </Animated.View>
@@ -58,7 +59,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
           </View>
         </View>
       </Animated.View>
@@ -71,7 +72,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
         <View style={styles.articleMetaInfo}>
           <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
           <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
+          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
         </View>
       </Animated.View>
     );
@@ -85,7 +86,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
           </View>
         </View>
       </Animated.View>
@@ -101,7 +102,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
         <View style={styles.articleMetaInfo}>
           <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
           <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
+          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
         </View>
       </Animated.View>
     );

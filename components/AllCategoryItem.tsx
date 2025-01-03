@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import { LinearGradient } from 'expo-linear-gradient';
+import { categoriesData } from '@/services/apiWp';
 
 export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item, memoizedCategories, newsListRef, setSelectedCategory, index }) => {
   const handleSeeMore = useCallback(
@@ -61,7 +62,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
                 <View style={styles.articleMetaInfo}>
                   <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
                   <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories}</Text>
+                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
                 </View>
               </View>
             </View>
@@ -75,7 +76,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
                 <View style={styles.articleMetaInfo}>
                   <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
                   <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories}</Text>
+                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
                 </View>
               </View>
             </View>
@@ -88,15 +89,17 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
               <View style={styles.articleMetaInfo}>
                 <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
                 <View style={styles.articleMetaInfoDivider} />
-                <Text style={styles.articleMetaInfoText}>{item.news[0].categories}</Text>
+                <Text style={styles.articleMetaInfoText}>{item.news[0].categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
               </View>
             </View>
           );
         }
       })}
-      <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
-        <Text style={styles.seeMoreText}>More {item.categoryName}</Text>
-      </TouchableOpacity>
+      {item.categoryName !== 'All' && (
+        <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
+          <Text style={styles.seeMoreText}>More {item.categoryName}</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
