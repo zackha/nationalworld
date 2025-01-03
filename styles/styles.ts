@@ -3,7 +3,7 @@ import { wp, hp } from '@/utils/dimensions';
 
 const styles = StyleSheet.create({
   articleOneImage: {
-    width: wp(100),
+    width: '100%',
     height: hp(27),
     backgroundColor: '#262626',
   },
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
   articleTitle: {
     flex: 1,
     fontSize: 18,
-    fontWeight: 'bold',
     color: '#fff',
     fontFamily: 'BBCReithSerifMd',
     letterSpacing: -0.8,
@@ -130,13 +129,20 @@ const styles = StyleSheet.create({
     fontFamily: 'BBCReithSansMd',
     color: '#fff',
   },
+  customArticleGradient: {
+    width: '100%',
+    height: '65%',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   customArticleContent: {
     padding: 14,
     gap: 6,
   },
   customArticleTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
     color: '#fff',
     fontFamily: 'BBCReithSerifMd',
     letterSpacing: -0.8,

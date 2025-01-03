@@ -32,12 +32,11 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
           {item.news.map((newsItem, idx) => (
             <View key={newsItem.guid} style={[styles.customArticleItem, idx === 0 && { marginLeft: 14 }]}>
               <ImageBackground source={{ uri: newsItem.image }} style={styles.customArticleImage}>
-                <LinearGradient colors={['transparent', 'rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0.4)', 'rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.8)']}>
-                  <View style={styles.customArticleContent}>
-                    <Text style={styles.customArticleTitle}>{decodeHTML(newsItem.title)}</Text>
-                    <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                  </View>
-                </LinearGradient>
+                <LinearGradient colors={['transparent', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']} style={styles.customArticleGradient} />
+                <View style={styles.customArticleContent}>
+                  <Text style={styles.customArticleTitle}>{decodeHTML(newsItem.title)}</Text>
+                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
+                </View>
               </ImageBackground>
             </View>
           ))}
@@ -83,7 +82,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
               </View>
             </View>
           );
-        } else {
+        } else if (index >= 3 && index <= 5) {
           return (
             <View key={newsItem.guid} style={styles.articleThreeContainer}>
               <Text style={styles.articleTitle}>{decodeHTML(newsItem.title)}</Text>
@@ -91,7 +90,22 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
               <View style={styles.articleMetaInfo}>
                 <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
                 <View style={styles.articleMetaInfoDivider} />
-                <Text style={styles.articleMetaInfoText}>{item.news[0].categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+                <Text style={styles.articleMetaInfoText}>{newsItem.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+              </View>
+            </View>
+          );
+        } else {
+          return (
+            <View key={newsItem.guid} style={styles.articleThreeContainer}>
+              <Image source={{ uri: newsItem.image }} style={styles.articleOneImage} />
+              <View style={styles.articleTwoContent}>
+                <Text style={styles.articleTitle}>{decodeHTML(newsItem.title)}</Text>
+                <Text style={styles.articleDescription}>{decodeHTML(newsItem.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+                <View style={styles.articleMetaInfo}>
+                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
+                  <View style={styles.articleMetaInfoDivider} />
+                  <Text style={styles.articleMetaInfoText}>{newsItem.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+                </View>
               </View>
             </View>
           );
