@@ -16,6 +16,7 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     BBCReithSerifMd: require('@/assets/fonts/BBCReithSerif_A_Md.ttf'),
     BBCReithSerifRg: require('@/assets/fonts/BBCReithSerif_A_Rg.ttf'),
+    BBCReithSerifBd: require('@/assets/fonts/BBCReithSerif_A_Bd.ttf'),
     BBCReithSansMd: require('@/assets/fonts/BBCReithSans_A_Md.ttf'),
     BBCReithSansRg: require('@/assets/fonts/BBCReithSans_A_Rg.ttf'),
     BBCReithSansBd: require('@/assets/fonts/BBCReithSans_A_Bd.ttf'),

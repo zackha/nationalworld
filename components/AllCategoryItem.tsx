@@ -23,9 +23,12 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
   if (index === 2) {
     return (
       <View style={styles.customArticleContainer}>
+        <Text style={{ fontFamily: 'BBCReithSerifBd', fontSize: 16, color: 'white', marginHorizontal: 14, paddingBottom: 7, borderBottomColor: '#393b40', borderBottomWidth: 1 }}>
+          Stories from {item.categoryName}
+        </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {item.news.map(newsItem => (
-            <View key={newsItem.guid} style={styles.customArticleItem}>
+          {item.news.map((newsItem, idx) => (
+            <View key={newsItem.guid} style={[styles.customArticleItem, idx === 0 && { marginLeft: 14 }]}>
               <ImageBackground source={{ uri: newsItem.image }} style={styles.customArticleImage}>
                 <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.customArticleGradient} />
                 <View style={styles.customArticleContent}>
@@ -35,6 +38,11 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
               </ImageBackground>
             </View>
           ))}
+          <View style={styles.customArticleItem}>
+            <TouchableOpacity style={styles.customArticleSeeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
+              <Text style={styles.customArticleSeeMoreText}>See More</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
     );
@@ -53,7 +61,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
                 <View style={styles.articleMetaInfo}>
                   <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
                   <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>World</Text>
+                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories}</Text>
                 </View>
               </View>
             </View>
@@ -67,7 +75,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
                 <View style={styles.articleMetaInfo}>
                   <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
                   <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>World</Text>
+                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories}</Text>
                 </View>
               </View>
             </View>
@@ -80,7 +88,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
               <View style={styles.articleMetaInfo}>
                 <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
                 <View style={styles.articleMetaInfoDivider} />
-                <Text style={styles.articleMetaInfoText}>World</Text>
+                <Text style={styles.articleMetaInfoText}>{item.news[0].categories}</Text>
               </View>
             </View>
           );

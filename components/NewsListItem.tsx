@@ -29,7 +29,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>World</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
           </View>
         </View>
       </Animated.View>
@@ -43,7 +43,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>World</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
           </View>
         </View>
       </Animated.View>
@@ -58,7 +58,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>World</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
           </View>
         </View>
       </Animated.View>
@@ -71,7 +71,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
         <View style={styles.articleMetaInfo}>
           <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
           <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>World</Text>
+          <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
         </View>
       </Animated.View>
     );
@@ -85,7 +85,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
           <View style={styles.articleMetaInfo}>
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
             <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>World</Text>
+            <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
           </View>
         </View>
       </Animated.View>
@@ -101,7 +101,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
         <View style={styles.articleMetaInfo}>
           <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
           <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>World</Text>
+          <Text style={styles.articleMetaInfoText}>{item.categories}</Text>
         </View>
       </Animated.View>
     );

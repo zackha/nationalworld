@@ -4,7 +4,7 @@ import { wp, hp } from '@/utils/dimensions';
 const styles = StyleSheet.create({
   articleOneImage: {
     width: wp(100),
-    height: 215,
+    height: hp(27),
     backgroundColor: '#262626',
   },
   articleOneContent: {
@@ -105,10 +105,10 @@ const styles = StyleSheet.create({
   },
 
   customArticleContainer: {
-    padding: 14,
-    paddingRight: 0,
     backgroundColor: '#151618',
     marginBottom: 14,
+    paddingVertical: 14,
+    gap: 14,
   },
   customArticleItem: {
     marginRight: 14,
@@ -119,6 +119,16 @@ const styles = StyleSheet.create({
     height: hp(40),
     backgroundColor: '#262626',
     justifyContent: 'flex-end',
+  },
+  customArticleSeeMoreButton: {
+    backgroundColor: '#393b40',
+    height: hp(40),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  customArticleSeeMoreText: {
+    fontFamily: 'BBCReithSansMd',
+    color: '#fff',
   },
   customArticleGradient: {
     width: '100%',
