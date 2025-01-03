@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
+import { wp, hp } from '@/utils/dimensions';
 
 const styles = StyleSheet.create({
   articleOneImage: {
-    width: '100%',
+    width: wp(100),
     height: 215,
     backgroundColor: '#262626',
   },
-  articleOneDescription: {
+  articleOneContent: {
     margin: 14,
     marginBottom: 0,
     gap: 8,
@@ -91,15 +92,49 @@ const styles = StyleSheet.create({
 
   seeMoreButton: {
     padding: 10,
-    backgroundColor: '#555',
-    borderRadius: 8,
     alignItems: 'center',
-    marginTop: 8,
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'white',
+    margin: 14,
   },
   seeMoreText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 16,
+    fontFamily: 'BBCReithSansMd',
+  },
+
+  customArticleContainer: {
+    padding: 14,
+    paddingRight: 0,
+    backgroundColor: '#151618',
+    marginBottom: 14,
+  },
+  customArticleItem: {
+    marginRight: 14,
+    width: wp(55),
+  },
+  customArticleImage: {
+    width: '100%',
+    height: hp(40),
+    backgroundColor: '#262626',
+    justifyContent: 'flex-end',
+  },
+  customArticleGradient: {
+    width: '100%',
+    height: '60%',
+    position: 'absolute',
+  },
+  customArticleContent: {
+    padding: 14,
+    gap: 6,
+  },
+  customArticleTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#fff',
+    fontFamily: 'BBCReithSerifMd',
+    letterSpacing: -0.8,
   },
 });
 

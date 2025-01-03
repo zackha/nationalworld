@@ -23,7 +23,7 @@ export const NewsListItemComponent = ({ item, index }: { item: NewsItemWp; index
     return (
       <Animated.View style={animatedStyle}>
         <Image source={{ uri: item.image }} style={styles.articleOneImage} />
-        <View style={styles.articleOneDescription}>
+        <View style={styles.articleOneContent}>
           <Text style={styles.articleOneTitle}>{decodeHTML(item.title)}</Text>
           <Text style={styles.articleDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
           <View style={styles.articleMetaInfo}>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, FlatList, RefreshControl, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import screenWidth from '@/utils/dimensions';
+import { screenWidth } from '@/utils/dimensions';
 import type { NewsItemWp, NewsListProps, AllCategoryNews } from '@/types';
 import { NewsListItemComponent } from '@/components/NewsListItem';
 import { BlurView } from 'expo-blur';
@@ -40,14 +40,14 @@ const NewsList: React.FC<NewsListProps> = ({
     transform: [{ translateY: withTiming(toastPosition.value, { duration: 100 }) }],
   }));
 
-  const renderAllCategoryItem = ({ item }: { item: AllCategoryNews }) => (
-    <AllCategoryItemComponent item={item} memoizedCategories={memoizedCategories} newsListRef={newsListRef} setSelectedCategory={setSelectedCategory} />
+  const renderAllCategoryItem = ({ item, index }: { item: AllCategoryNews; index: number }) => (
+    <AllCategoryItemComponent item={item} index={index} memoizedCategories={memoizedCategories} newsListRef={newsListRef} setSelectedCategory={setSelectedCategory} />
   );
 
   const renderNewsItem = ({ item, index }: { item: NewsItemWp; index: number }) => <NewsListItemComponent item={item} index={index} />;
 
   const renderItem = ({ item, index }: { item: AllCategoryNews | NewsItemWp; index: number }) =>
-    'categoryName' in item ? renderAllCategoryItem({ item }) : renderNewsItem({ item, index });
+    'categoryName' in item ? renderAllCategoryItem({ item, index }) : renderNewsItem({ item, index });
 
   const keyExtractor = (item: AllCategoryNews | NewsItemWp, index: number) => ('categoryName' in item ? `${item.categoryName}-${index}` : item.guid);
 

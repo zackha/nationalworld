@@ -1,5 +1,7 @@
 import { Dimensions } from 'react-native';
 
-const screenWidth = Dimensions.get('window').width;
+export const screenWidth = Dimensions.get('window').width;
+export const screenHeight = Dimensions.get('window').height;
 
-export default screenWidth;
+export const wp = (percentage: number) => (screenWidth * percentage) / 100;
+export const hp = (percentage: number) => (screenHeight * percentage) / 100;

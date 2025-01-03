@@ -1,5 +1,5 @@
 import ContentLoader, { Rect } from 'react-content-loader/native';
-import screenWidth from '@/utils/dimensions';
+import { screenWidth } from '@/utils/dimensions';
 
 export const SkeletonLoadingNews = () => (
   <ContentLoader speed={1} width={'100%'} backgroundColor="#161616" foregroundColor="#222">

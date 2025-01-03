@@ -53,6 +53,7 @@ export interface AllCategoryItemProps {
   memoizedCategories: string[];
   newsListRef: React.RefObject<FlatList<string>>;
   setSelectedCategory: (category: string) => void;
+  index: number;
 }
 
 export interface NewsListProps {

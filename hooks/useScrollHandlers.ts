@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { NativeSyntheticEvent, NativeScrollEvent, FlatList } from 'react-native';
 import { categoriesData } from '@/services/apiWp';
-import screenWidth from '@/utils/dimensions';
+import { screenWidth } from '@/utils/dimensions';
 import type { NewsDataState } from '@/types';
 
 const useScrollHandlers = (newsData: NewsDataState, loadNews: (categoryId: number, categoryName: string) => Promise<void>, setSelectedCategory: Function) => {
