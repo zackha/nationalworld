@@ -11,7 +11,6 @@ const MAPPING = {
   // See SF Symbols in the SF Symbols app on Mac.
   'house.fill': 'home',
   'bookmark.fill': 'bookmark',
-  'doc.text.magnifyingglass': 'manage-search',
   'person.fill': 'person',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
