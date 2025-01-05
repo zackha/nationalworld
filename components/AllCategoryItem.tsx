@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground, ViewBase } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import type { AllCategoryItemProps } from '@/types';
 import styles from '@/styles/styles';
 import { decodeHTML } from 'entities';
@@ -7,8 +7,8 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import { LinearGradient } from 'expo-linear-gradient';
-import { categoriesData } from '@/services/apiWp';
 import Octicons from '@expo/vector-icons/Octicons';
+import { ArticleFour, ArticleOne, ArticleThree, ArticleTwo } from '@/components/ArticleItems';
 
 export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item, memoizedCategories, newsListRef, setSelectedCategory, index }) => {
   const handleSeeMore = useCallback(
@@ -25,9 +25,10 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
   if (index === 1) {
     return (
       <View style={styles.customArticleContainer}>
-        <Text style={{ fontFamily: 'BBCReithSerifBd', fontSize: 16, color: 'white', marginHorizontal: 14, paddingBottom: 8, borderBottomColor: '#393b40', borderBottomWidth: 1 }}>
-          Stories from {item.categoryName}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 14, gap: 14 }}>
+          <View style={{ width: 4, height: 16, backgroundColor: 'red' }} />
+          <Text style={{ fontFamily: 'BBCReithSerifBd', fontSize: 16, color: 'white' }}>Stories from {item.categoryName}</Text>
+        </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {item.news.map((newsItem, idx) => (
             <View key={newsItem.guid} style={[styles.customArticleItem, idx === 0 && { marginLeft: 14 }]}>
@@ -55,72 +56,22 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
     <View>
       {item.categoryName !== 'Latest News' && (
         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 14, gap: 14, backgroundColor: '#0d0d0d', borderTopWidth: 6, borderTopColor: '#262626' }}>
-          <View style={{ width: 8, height: 38, backgroundColor: 'red' }}></View>
+          <View style={{ width: 8, height: 38, backgroundColor: 'red' }} />
           <Text style={{ color: 'white', fontFamily: 'BBCReithSerifBd', fontSize: 38 }}>{item.categoryName}</Text>
         </View>
       )}
       {item.news.map((newsItem, index) => {
         if (index === 0) {
-          return (
-            <View key={newsItem.guid}>
-              <Image source={{ uri: newsItem.image }} style={styles.articleOneImage} />
-              <View style={styles.articleOneContent}>
-                <Text style={styles.articleOneTitle}>{decodeHTML(newsItem.title)}</Text>
-                <Text style={styles.articleDescription}>{decodeHTML(newsItem.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-                <View style={styles.articleMetaInfo}>
-                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                  <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-                </View>
-              </View>
-            </View>
-          );
+          return <ArticleOne key={newsItem.guid} {...newsItem} />;
         } else if (index === 1 || index === 2) {
-          return (
-            <View key={newsItem.guid} style={styles.articleTwoContainer}>
-              <Image source={{ uri: newsItem.image }} style={styles.articleTwoImage} />
-              <View style={styles.articleTwoContent}>
-                <Text style={styles.articleTitle}>{decodeHTML(newsItem.title)}</Text>
-                <View style={styles.articleMetaInfo}>
-                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                  <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>{item.news[0].categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-                </View>
-              </View>
-            </View>
-          );
+          return <ArticleTwo key={newsItem.guid} {...newsItem} />;
         } else if (index >= 3 && index <= 5) {
-          return (
-            <View key={newsItem.guid} style={styles.articleThreeContainer}>
-              <Text style={styles.articleTitle}>{decodeHTML(newsItem.title)}</Text>
-              <Text style={styles.articleDescription}>{decodeHTML(newsItem.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-              <View style={styles.articleMetaInfo}>
-                <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                <View style={styles.articleMetaInfoDivider} />
-                <Text style={styles.articleMetaInfoText}>{newsItem.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-              </View>
-            </View>
-          );
+          return <ArticleThree key={newsItem.guid} {...newsItem} />;
         } else {
-          return (
-            <View key={newsItem.guid} style={styles.articleThreeContainer}>
-              <Image source={{ uri: newsItem.image }} style={styles.articleOneImage} />
-              <View style={styles.articleTwoContent}>
-                <Text style={styles.articleTitle}>{decodeHTML(newsItem.title)}</Text>
-                <Text style={styles.articleDescription}>{decodeHTML(newsItem.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-                <View style={styles.articleMetaInfo}>
-                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                  <View style={styles.articleMetaInfoDivider} />
-                  <Text style={styles.articleMetaInfoText}>{newsItem.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-                </View>
-              </View>
-            </View>
-          );
+          return <ArticleFour key={newsItem.guid} {...newsItem} />;
         }
       })}
-      <TouchableOpacity
-        style={{ marginHorizontal: 14, flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 12 }}
-        onPress={() => handleSeeMore(item.categoryName === 'Latest News' ? 'News' : item.categoryName)}>
+      <TouchableOpacity style={styles.seeMoreButton} onPress={() => handleSeeMore(item.categoryName === 'Latest News' ? 'News' : item.categoryName)}>
         <Text style={styles.seeMoreText}>
           More <Text style={{ textTransform: 'lowercase' }}>{item.categoryName}</Text>
         </Text>
