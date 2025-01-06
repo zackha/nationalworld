@@ -4,73 +4,39 @@ import { wp, hp } from '@/utils/dimensions';
 const styles = StyleSheet.create({
   articleOneImage: {
     width: '100%',
-    height: hp(27),
+    height: hp(26),
     backgroundColor: '#262626',
   },
   articleOneContent: {
-    margin: 14,
-    marginBottom: 0,
+    margin: 12,
     gap: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    paddingBottom: 12,
+    paddingBottom: 20,
   },
   articleOneTitle: {
     fontSize: 24,
     color: '#fff',
     fontFamily: 'BBCReithSerifMd',
     letterSpacing: -0.8,
+    lineHeight: 28,
   },
-  articleDescription: {
+  articleOneDescription: {
+    paddingVertical: 2,
     fontSize: 14,
     color: '#fff',
     fontFamily: 'BBCReithSerifRg',
   },
-  articleTwoContainer: {
-    flexDirection: 'row',
-    marginHorizontal: 14,
-    gap: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    paddingVertical: 14,
-  },
-  articleTwoImage: {
-    height: 80,
-    width: '35%',
-    objectFit: 'cover',
-    backgroundColor: '#262626',
-  },
-  articleTwoContent: {
-    flex: 1,
-    gap: 6,
-  },
-  articleTitle: {
-    flex: 1,
-    fontSize: 18,
-    color: '#fff',
-    fontFamily: 'BBCReithSerifMd',
-    letterSpacing: -0.8,
-  },
-  articleTwoDescription: {
-    fontSize: 12,
-    color: '#fff',
-  },
-  articleThreeContainer: {
-    marginHorizontal: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    paddingVertical: 14,
-    gap: 8,
-  },
-  articleMetaInfo: {
-    marginTop: 8,
+  articleOneMetaInfo: {
+    marginTop: 10,
+    marginBottom: 2,
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
   },
   articleMetaInfoText: {
     fontSize: 12,
-    color: '#999',
+    color: '#ddd',
     fontFamily: 'BBCReithSansRg',
   },
   articleMetaInfoDivider: {
@@ -79,15 +45,145 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginHorizontal: 4,
   },
+  //////////////////////////
+  articleTwoContainer: {
+    flexDirection: 'row',
+    marginHorizontal: 12,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingVertical: 12,
+    marginVertical: 2,
+  },
+  articleTwoImage: {
+    height: hp(8),
+    width: wp(32),
+    objectFit: 'cover',
+    backgroundColor: '#262626',
+  },
+  articleTwoContent: {
+    flex: 1,
+    gap: 6,
+  },
+  articleTwoTitle: {
+    flex: 1,
+    fontSize: 18,
+    color: '#fff',
+    fontFamily: 'BBCReithSerifMd',
+    letterSpacing: -0.8,
+    lineHeight: 22,
+  },
+  articleTwoMetaInfo: {
+    marginTop: 8,
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  //////////////////////////
+  articleThreeContainer: {
+    marginHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingTop: 14,
+    paddingBottom: 10,
+    gap: 8,
+  },
+  articleThreeTitle: {
+    flex: 1,
+    fontSize: 18,
+    color: '#fff',
+    fontFamily: 'BBCReithSerifMd',
+    letterSpacing: -0.8,
+    lineHeight: 22,
+  },
+  articleThreeDescription: {
+    fontSize: 14,
+    color: '#fff',
+    fontFamily: 'BBCReithSerifRg',
+  },
+  articleThreeMetaInfo: {
+    marginTop: 8,
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  //////////////////////////
+  articleFourContainer: {
+    marginHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingTop: 14,
+    paddingBottom: 12,
+    gap: 12,
+  },
   articleFourImage: {
-    width: '50%',
-    height: 110,
+    width: '100%',
+    height: hp(24),
     backgroundColor: '#262626',
   },
   articleFourContent: {
-    flexDirection: 'row',
+    flex: 1,
     gap: 8,
   },
+  articleFourTitle: {
+    fontSize: 18,
+    color: '#fff',
+    fontFamily: 'BBCReithSerifMd',
+    letterSpacing: -0.8,
+    lineHeight: 22,
+  },
+  articleFourDescription: {
+    paddingVertical: 2,
+    fontSize: 14,
+    color: '#fff',
+    fontFamily: 'BBCReithSerifRg',
+  },
+  articleFourMetaInfo: {
+    marginTop: 16,
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  //////////////////////////
+  articleFiveContainer: {
+    marginHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingTop: 24,
+    paddingBottom: 12,
+    gap: 4,
+  },
+  articleFiveContent: {
+    flexDirection: 'row',
+    gap: 14,
+  },
+  articleFiveTitle: {
+    flex: 1,
+    fontSize: 20,
+    color: '#fff',
+    fontFamily: 'BBCReithSerifMd',
+    letterSpacing: -0.8,
+    lineHeight: 24,
+  },
+  articleFiveImage: {
+    width: '48%',
+    height: hp(12),
+    backgroundColor: '#262626',
+  },
+  articleFiveDescription: {
+    paddingVertical: 2,
+    fontSize: 14,
+    color: '#fff',
+    fontFamily: 'BBCReithSerifRg',
+  },
+  articleFiveMetaInfo: {
+    marginTop: 18,
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+
+  //////////////////////////
 
   seeMoreButton: {
     marginHorizontal: 14,

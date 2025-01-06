@@ -45,11 +45,12 @@ const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,
     borderBottomColor: '#444',
+    paddingBottom: 4,
   },
   categoryContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 14,
   },
   categoryText: {
     fontSize: 16,
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   underline: { borderBottomWidth: 2, borderBottomColor: 'transparent', position: 'absolute', bottom: -4, left: 0, right: 0 },
   underlineActive: { borderBottomColor: '#fff' },
   divider: {
-    height: '65%',
+    height: '80%',
     width: 1,
     backgroundColor: '#444',
   },

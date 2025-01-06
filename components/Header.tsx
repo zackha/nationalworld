@@ -18,11 +18,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoContainer: {
-    // backgroundColor: 'blue',
-    paddingVertical: 4,
+    paddingVertical: 2,
     alignItems: 'center',
     width: '100%',
-    height: 40,
+    height: 42,
     color: '#fff',
   },
 });
