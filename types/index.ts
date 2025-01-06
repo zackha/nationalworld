@@ -1,4 +1,4 @@
-import { FlatList } from 'react-native';
+import { FlatList, StyleProp, ViewStyle } from 'react-native';
 
 export interface NewsItemWp {
   title: string;
@@ -68,4 +68,10 @@ export interface NewsListProps {
   onScrollBeginDrag: (event: any) => void;
   onMomentumScrollEnd: (event: any) => void;
   setSelectedCategory: (category: string) => void;
+}
+
+export interface SettingsListItemProps {
+  title: string;
+  onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
 }

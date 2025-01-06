@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import { LinearGradient } from 'expo-linear-gradient';
-import Octicons from '@expo/vector-icons/Octicons';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ArticleFour, ArticleOne, ArticleThree, ArticleTwo } from '@/components/ArticleItems';
 
 export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item, memoizedCategories, newsListRef, setSelectedCategory, index }) => {
@@ -44,7 +44,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
           <View style={styles.customArticleItem}>
             <TouchableOpacity style={styles.customArticleSeeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>
               <Text style={styles.seeMoreText}>See more</Text>
-              <Octicons name="arrow-right" size={22} color="white" />
+              <IconSymbol name="arrow.forward" size={18} color="white" />
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -75,7 +75,7 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
         <Text style={styles.seeMoreText}>
           More <Text style={{ textTransform: 'lowercase' }}>{item.categoryName}</Text>
         </Text>
-        <Octicons name="arrow-right" size={22} color="white" />
+        <IconSymbol name="arrow.forward" size={18} color="white" />
       </TouchableOpacity>
     </View>
   );
