@@ -2,68 +2,103 @@ import React, { useState } from 'react';
 import { HeaderTwo } from '@/components/Header';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { TouchableOpacity, Text, View, Switch, ScrollView } from 'react-native';
+import { TouchableOpacity, Text, View, Switch, ScrollView, StyleSheet } from 'react-native';
+import type { SettingsListItemProps } from '@/types';
+
+const ListItem: React.FC<SettingsListItemProps> = ({ title, onPress, style }) => (
+  <TouchableOpacity style={[styles.item, style]} onPress={onPress}>
+    <Text style={styles.itemText}>{title}</Text>
+    <IconSymbol name="arrow.forward" size={20} color="white" />
+  </TouchableOpacity>
+);
 
 export default function AccountScreen() {
-  const [isEnabled, setIsEnabled] = useState(true);
+  const [isEnabled, setIsEnabled] = useState<boolean>(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
   return (
     <ThemedView>
       <HeaderTwo title="Settings" />
-      <ScrollView style={{ margin: 12 }}>
-        <View style={{ paddingVertical: 18, gap: 14 }}>
-          <TouchableOpacity style={{ padding: 18, backgroundColor: '#151618', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontFamily: 'BBCReithSansMd', fontSize: 16 }}>Account settings</Text>
-            <IconSymbol name="arrow.forward" size={20} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ padding: 18, backgroundColor: '#151618', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontFamily: 'BBCReithSansMd', fontSize: 16 }}>Theme</Text>
-            <IconSymbol name="arrow.forward" size={20} color="white" />
-          </TouchableOpacity>
-          <View style={{ padding: 18, backgroundColor: '#151618', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <View style={{ flex: 1, gap: 4 }}>
-              <Text style={{ color: 'white', fontFamily: 'BBCReithSansMd', fontSize: 16 }}>Notification</Text>
-              <Text style={{ color: '#aaa', fontFamily: 'BBCReithSansMd', fontSize: 12, lineHeight: 22 }}>
+      <ScrollView style={styles.container}>
+        <View style={styles.section}>
+          <ListItem title="Account settings" />
+          <ListItem title="Theme" />
+          <View style={[styles.item, styles.notificationContainer]}>
+            <View style={styles.notificationText}>
+              <Text style={styles.itemText}>Notification</Text>
+              <Text style={styles.notificationDescription}>
                 Turn on breaking news notifications. To receive these notifications, you must also allow notifications in your device settings.
               </Text>
             </View>
-            <Switch
-              trackColor={{ false: '#000', true: '#fff' }}
-              thumbColor={isEnabled ? '#000' : '#fff'}
-              onValueChange={toggleSwitch}
-              value={isEnabled}
-              style={{ transform: [{ scaleX: 0.6 }, { scaleY: 0.6 }], marginRight: -8, marginTop: -4 }}
-            />
+            <Switch trackColor={{ false: '#000', true: '#fff' }} thumbColor={isEnabled ? '#000' : '#fff'} onValueChange={toggleSwitch} value={isEnabled} style={styles.switch} />
           </View>
           <View>
-            <TouchableOpacity
-              style={{
-                padding: 18,
-                backgroundColor: '#151618',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottomColor: '#666',
-                borderBottomWidth: 1,
-              }}>
-              <Text style={{ color: 'white', fontFamily: 'BBCReithSansMd', fontSize: 16 }}>Terms & Conditions</Text>
-              <IconSymbol name="arrow.forward" size={20} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ padding: 18, backgroundColor: '#151618', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontFamily: 'BBCReithSansMd', fontSize: 16 }}>Privacy Policy</Text>
-              <IconSymbol name="arrow.forward" size={20} color="white" />
-            </TouchableOpacity>
+            <ListItem title="Terms & Conditions" style={styles.borderBottom} />
+            <ListItem title="Privacy Policy" />
           </View>
-          <TouchableOpacity style={{ padding: 18, backgroundColor: '#151618', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontFamily: 'BBCReithSansMd', fontSize: 16 }}>Report an issue</Text>
-            <IconSymbol name="arrow.forward" size={20} color="white" />
-          </TouchableOpacity>
+          <ListItem title="Report an issue" />
         </View>
-        <View style={{ paddingVertical: 20, gap: 4 }}>
-          <Text style={{ color: '#ccc', fontFamily: 'BBCReithSansRg', textAlign: 'center' }}>Version v2025.7.2 (26074)</Text>
-          <Text style={{ color: '#ccc', fontFamily: 'BBCReithSansRg', textAlign: 'center' }}>Copyright 2025 Barrnon Media Limited</Text>
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Version v2025.7.2 (26074)</Text>
+          <Text style={styles.footerText}>Copyright 2025 Barrnon Media Limited</Text>
         </View>
       </ScrollView>
     </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    margin: 12,
+  },
+  section: {
+    paddingVertical: 18,
+    gap: 14,
+  },
+  item: {
+    padding: 18,
+    backgroundColor: '#151618',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  itemText: {
+    color: 'white',
+    fontFamily: 'BBCReithSansMd',
+    fontSize: 16,
+  },
+  notificationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  notificationText: {
+    flex: 1,
+    gap: 4,
+  },
+  notificationDescription: {
+    color: '#aaa',
+    fontFamily: 'BBCReithSansMd',
+    fontSize: 12,
+    lineHeight: 22,
+  },
+  switch: {
+    transform: [{ scaleX: 0.6 }, { scaleY: 0.6 }],
+    marginRight: -8,
+    marginTop: -4,
+  },
+  footer: {
+    paddingVertical: 20,
+    gap: 4,
+    textAlign: 'center',
+    alignItems: 'center',
+  },
+  footerText: {
+    color: '#ccc',
+    fontFamily: 'BBCReithSansRg',
+  },
+  borderBottom: {
+    borderBottomColor: '#666',
+    borderBottomWidth: 1,
+  },
+});
