@@ -7,7 +7,7 @@ import useRefreshNews from '@/hooks/useRefreshNews';
 import useScrollHandlers from '@/hooks/useScrollHandlers';
 import NewsList from '@/components/NewsList';
 import CategorySelector from '@/components/CategorySelector';
-import Header from '@/components/Header';
+import { Header } from '@/components/Header';
 
 export default function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].name);
