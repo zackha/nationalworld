@@ -18,29 +18,31 @@ export default function AccountScreen() {
 
   return (
     <ThemedView>
-      <HeaderTwo title="Settings" />
-      <ScrollView style={styles.container}>
-        <View style={styles.section}>
-          <ListItem title="Account settings" />
-          <ListItem title="Theme" />
-          <View style={[styles.item, styles.notificationContainer]}>
-            <View style={styles.notificationText}>
-              <Text style={styles.itemText}>Notification</Text>
-              <Text style={styles.notificationDescription}>
-                Turn on breaking news notifications. To receive these notifications, you must also allow notifications in your device settings.
-              </Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <HeaderTwo title="Settings" />
+        <View style={styles.container}>
+          <View style={styles.section}>
+            <ListItem title="Account settings" />
+            <ListItem title="Theme" />
+            <View style={[styles.item, styles.notificationContainer]}>
+              <View style={styles.notificationText}>
+                <Text style={styles.itemText}>Notification</Text>
+                <Text style={styles.notificationDescription}>
+                  Turn on breaking news notifications. To receive these notifications, you must also allow notifications in your device settings.
+                </Text>
+              </View>
+              <Switch trackColor={{ false: '#000', true: '#fff' }} thumbColor={isEnabled ? '#000' : '#fff'} onValueChange={toggleSwitch} value={isEnabled} style={styles.switch} />
             </View>
-            <Switch trackColor={{ false: '#000', true: '#fff' }} thumbColor={isEnabled ? '#000' : '#fff'} onValueChange={toggleSwitch} value={isEnabled} style={styles.switch} />
+            <View>
+              <ListItem title="Terms & Conditions" style={styles.borderBottom} />
+              <ListItem title="Privacy Policy" />
+            </View>
+            <ListItem title="Report an issue" />
           </View>
-          <View>
-            <ListItem title="Terms & Conditions" style={styles.borderBottom} />
-            <ListItem title="Privacy Policy" />
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Version v2025.7.2 (26074)</Text>
+            <Text style={styles.footerText}>Copyright 2025 Barrnon Media Limited</Text>
           </View>
-          <ListItem title="Report an issue" />
-        </View>
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Version v2025.7.2 (26074)</Text>
-          <Text style={styles.footerText}>Copyright 2025 Barrnon Media Limited</Text>
         </View>
       </ScrollView>
     </ThemedView>
