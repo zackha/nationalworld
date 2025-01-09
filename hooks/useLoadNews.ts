@@ -3,14 +3,16 @@ import { fetchAllCategoryNews, fetchNews } from '@/services/apiWp';
 import type { NewsDataState, LoadingState, AllCategoryNews, NewsItemWp, PaginationState, HasMoreState } from '@/types';
 import { categoriesData } from '@/services/apiWp';
 
-const useLoadNews = (selectedCategory: string) => {
+const useLoadNews = (selectedCategory: string = 'All') => {
   const [newsData, setNewsData] = useState<NewsDataState>({});
   const [loading, setLoading] = useState<LoadingState>({});
   const [page, setPage] = useState<PaginationState>({});
   const [hasMore, setHasMore] = useState<HasMoreState>({});
+  console.log('selectedCategory:', selectedCategory);
 
   const loadNews = useCallback(
-    async (categoryId: number, categoryName: string, pageNumber: number = 1) => {
+    async (categoryId: number = 0, categoryName: string = 'All', pageNumber: number = 1) => {
+      console.log('categoryId:', categoryId, 'categoryName:', categoryName, 'pageNumber:', pageNumber);
       if (loading[categoryName] || hasMore[categoryName] === false) return;
       console.log(`\x1b[1m\x1b[33m[LOADING]\x1b[0m\x1b[33m Fetching news for ${categoryName} (ID: ${categoryId}, Page: ${pageNumber})...\x1b[0m`);
       setLoading(prev => ({ ...prev, [categoryName]: true }));
