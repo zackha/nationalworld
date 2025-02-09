@@ -1,5 +1,5 @@
 import { useEffect, memo } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ImageBackground } from 'react-native';
 import { Image } from 'expo-image';
 import { decodeHTML } from 'entities';
 import type { NewsItemWp } from '@/types';
@@ -8,6 +8,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import styles from '@/styles/styles';
 import { categoriesData } from '@/services/apiWp';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Link } from 'expo-router';
 dayjs.extend(relativeTime);
 
 export const ArticleOne = memo((item: NewsItemWp) => {
@@ -137,6 +139,35 @@ export const ArticleFive = memo((item: NewsItemWp) => {
         <View style={styles.articleMetaInfoDivider} />
         <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
       </View>
+    </Animated.View>
+  );
+});
+
+export const CustomArticle = memo(({ item, isFirst }: { item: NewsItemWp; isFirst: boolean }) => {
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    opacity.value = withTiming(1, { duration: 200 });
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+  return (
+    <Animated.View style={[styles.customArticleItem, isFirst && { marginLeft: 14 }, animatedStyle]}>
+      <Link
+        href={{
+          pathname: '/news/[id]',
+          params: { id: item.guid },
+        }}>
+        <ImageBackground source={{ uri: item.image }} style={styles.customArticleImage}>
+          <LinearGradient colors={['transparent', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']} style={styles.customArticleGradient} />
+          <View style={styles.customArticleContent}>
+            <Text style={styles.customArticleTitle}>{decodeHTML(item.title)}</Text>
+            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+          </View>
+        </ImageBackground>
+      </Link>
     </Animated.View>
   );
 });
