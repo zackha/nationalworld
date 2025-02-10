@@ -1,5 +1,5 @@
 import { useEffect, memo } from 'react';
-import { View, Text, ImageBackground } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { decodeHTML } from 'entities';
 import type { NewsItemWp } from '@/types';
@@ -9,7 +9,6 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-na
 import styles from '@/styles/styles';
 import { categoriesData } from '@/services/apiWp';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Link } from 'expo-router';
 dayjs.extend(relativeTime);
 
 export const ArticleOne = memo((item: NewsItemWp) => {
@@ -153,13 +152,11 @@ export const CustomArticle = memo(({ item, isFirst }: { item: NewsItemWp; isFirs
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
   }));
+
+  const handlePress = () => {};
   return (
     <Animated.View style={[styles.customArticleItem, isFirst && { marginLeft: 14 }, animatedStyle]}>
-      <Link
-        href={{
-          pathname: '/news/[id]',
-          params: { id: item.guid },
-        }}>
+      <TouchableOpacity onPress={handlePress}>
         <ImageBackground source={{ uri: item.image }} style={styles.customArticleImage}>
           <LinearGradient colors={['transparent', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']} style={styles.customArticleGradient} />
           <View style={styles.customArticleContent}>
@@ -167,7 +164,7 @@ export const CustomArticle = memo(({ item, isFirst }: { item: NewsItemWp; isFirs
             <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
           </View>
         </ImageBackground>
-      </Link>
+      </TouchableOpacity>
     </Animated.View>
   );
 });

@@ -48,6 +48,7 @@ export const fetchNews = async (page: number = 1, categoryId: number = 0, perPag
         title: item.title.rendered,
         link: item.link,
         description: item.excerpt.rendered,
+        content: item.content.rendered,
         pubDate: item.date,
         guid: `${item.id}`,
         creator: item.author,

@@ -1,13 +1,24 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 import { ThemedView } from '@/components/ThemedView';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
-export default function Page() {
+export default function NewsDetailPage() {
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    opacity.value = withTiming(1, { duration: 200 });
+  });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+
   return (
     <ThemedView>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
-        <Text style={{ color: 'white', fontFamily: 'BBCReithSansMd', fontSize: 18, textAlign: 'center' }}>{JSON.stringify(useLocalSearchParams())}</Text>
-      </View>
+      <Animated.View style={animatedStyle}>
+        <Text>test</Text>
+      </Animated.View>
     </ThemedView>
   );
 }
