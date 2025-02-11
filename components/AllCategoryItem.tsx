@@ -1,14 +1,12 @@
 import { useCallback } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import type { AllCategoryItemProps } from '@/types';
 import styles from '@/styles/styles';
-import { decodeHTML } from 'entities';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
-import { LinearGradient } from 'expo-linear-gradient';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { ArticleFour, ArticleOne, ArticleThree, ArticleTwo } from '@/components/ArticleItems';
+import { ArticleFour, ArticleOne, ArticleThree, ArticleTwo, CustomArticle } from '@/components/ArticleItems';
 
 export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item, memoizedCategories, newsListRef, setSelectedCategory, index }) => {
   const handleSeeMore = useCallback(
@@ -30,16 +28,8 @@ export const AllCategoryItemComponent: React.FC<AllCategoryItemProps> = ({ item,
           <Text style={{ fontFamily: 'BBCReithSerifBd', fontSize: 16, color: 'white' }}>Stories from {item.categoryName}</Text>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {item.news.map((newsItem, idx) => (
-            <View key={newsItem.guid} style={[styles.customArticleItem, idx === 0 && { marginLeft: 14 }]}>
-              <ImageBackground source={{ uri: newsItem.image }} style={styles.customArticleImage}>
-                <LinearGradient colors={['transparent', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']} style={styles.customArticleGradient} />
-                <View style={styles.customArticleContent}>
-                  <Text style={styles.customArticleTitle}>{decodeHTML(newsItem.title)}</Text>
-                  <Text style={styles.articleMetaInfoText}>{dayjs(newsItem.pubDate).fromNow()}</Text>
-                </View>
-              </ImageBackground>
-            </View>
+          {item.news.map((item, idx) => (
+            <CustomArticle key={item.guid} item={item} isFirst={idx === 0} />
           ))}
           <View style={styles.customArticleItem}>
             <TouchableOpacity style={styles.customArticleSeeMoreButton} onPress={() => handleSeeMore(item.categoryName)}>

@@ -4,6 +4,7 @@ export interface NewsItemWp {
   title: string;
   link: string;
   description: string;
+  content: string;
   pubDate: string;
   guid: string;
   creator: number;
