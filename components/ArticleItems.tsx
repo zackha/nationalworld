@@ -9,6 +9,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-na
 import styles from '@/styles/styles';
 import { categoriesData } from '@/services/apiWp';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 dayjs.extend(relativeTime);
 
 export const ArticleOne = memo((item: NewsItemWp) => {
@@ -22,18 +23,27 @@ export const ArticleOne = memo((item: NewsItemWp) => {
     opacity: opacity.value,
   }));
 
+  const handlePress = () => {
+    router.push({
+      pathname: '/news/[id]',
+      params: { id: item.guid, data: JSON.stringify(item) },
+    });
+  };
+
   return (
     <Animated.View style={animatedStyle}>
-      <Image source={item.image} style={styles.articleOneImage} />
-      <View style={styles.articleOneContent}>
-        <Text style={styles.articleOneTitle}>{decodeHTML(item.title)}</Text>
-        <Text style={styles.articleOneDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-        <View style={styles.articleOneMetaInfo}>
-          <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-          <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+      <TouchableOpacity onPress={handlePress}>
+        <Image source={item.image} style={styles.articleOneImage} />
+        <View style={styles.articleOneContent}>
+          <Text style={styles.articleOneTitle}>{decodeHTML(item.title)}</Text>
+          <Text style={styles.articleOneDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+          <View style={styles.articleOneMetaInfo}>
+            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+            <View style={styles.articleMetaInfoDivider} />
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Animated.View>
   );
 });
@@ -49,17 +59,26 @@ export const ArticleTwo = memo((item: NewsItemWp) => {
     opacity: opacity.value,
   }));
 
+  const handlePress = () => {
+    router.push({
+      pathname: '/news/[id]',
+      params: { id: item.guid, data: JSON.stringify(item) },
+    });
+  };
+
   return (
-    <Animated.View style={[styles.articleTwoContainer, animatedStyle]}>
-      <Image source={item.image} style={styles.articleTwoImage} />
-      <View style={styles.articleTwoContent}>
-        <Text style={styles.articleTwoTitle}>{decodeHTML(item.title)}</Text>
-        <View style={styles.articleTwoMetaInfo}>
-          <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-          <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+    <Animated.View style={animatedStyle}>
+      <TouchableOpacity onPress={handlePress} style={styles.articleTwoContainer}>
+        <Image source={item.image} style={styles.articleTwoImage} />
+        <View style={styles.articleTwoContent}>
+          <Text style={styles.articleTwoTitle}>{decodeHTML(item.title)}</Text>
+          <View style={styles.articleTwoMetaInfo}>
+            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+            <View style={styles.articleMetaInfoDivider} />
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Animated.View>
   );
 });
@@ -75,15 +94,24 @@ export const ArticleThree = memo((item: NewsItemWp) => {
     opacity: opacity.value,
   }));
 
+  const handlePress = () => {
+    router.push({
+      pathname: '/news/[id]',
+      params: { id: item.guid, data: JSON.stringify(item) },
+    });
+  };
+
   return (
-    <Animated.View style={[styles.articleThreeContainer, animatedStyle]}>
-      <Text style={styles.articleThreeTitle}>{decodeHTML(item.title)}</Text>
-      <Text style={styles.articleThreeDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-      <View style={styles.articleThreeMetaInfo}>
-        <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-        <View style={styles.articleMetaInfoDivider} />
-        <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-      </View>
+    <Animated.View style={animatedStyle}>
+      <TouchableOpacity onPress={handlePress} style={styles.articleThreeContainer}>
+        <Text style={styles.articleThreeTitle}>{decodeHTML(item.title)}</Text>
+        <Text style={styles.articleThreeDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+        <View style={styles.articleThreeMetaInfo}>
+          <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+          <View style={styles.articleMetaInfoDivider} />
+          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+        </View>
+      </TouchableOpacity>
     </Animated.View>
   );
 });
@@ -99,18 +127,27 @@ export const ArticleFour = memo((item: NewsItemWp) => {
     opacity: opacity.value,
   }));
 
+  const handlePress = () => {
+    router.push({
+      pathname: '/news/[id]',
+      params: { id: item.guid, data: JSON.stringify(item) },
+    });
+  };
+
   return (
-    <Animated.View style={[styles.articleFourContainer, animatedStyle]}>
-      <Image source={item.image} style={styles.articleFourImage} />
-      <View style={styles.articleFourContent}>
-        <Text style={styles.articleFourTitle}>{decodeHTML(item.title)}</Text>
-        <Text style={styles.articleFourDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-        <View style={styles.articleFourMetaInfo}>
-          <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-          <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+    <Animated.View style={animatedStyle}>
+      <TouchableOpacity onPress={handlePress} style={styles.articleFourContainer}>
+        <Image source={item.image} style={styles.articleFourImage} />
+        <View style={styles.articleFourContent}>
+          <Text style={styles.articleFourTitle}>{decodeHTML(item.title)}</Text>
+          <Text style={styles.articleFourDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+          <View style={styles.articleFourMetaInfo}>
+            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+            <View style={styles.articleMetaInfoDivider} />
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Animated.View>
   );
 });
@@ -126,18 +163,27 @@ export const ArticleFive = memo((item: NewsItemWp) => {
     opacity: opacity.value,
   }));
 
+  const handlePress = () => {
+    router.push({
+      pathname: '/news/[id]',
+      params: { id: item.guid, data: JSON.stringify(item) },
+    });
+  };
+
   return (
-    <Animated.View style={[styles.articleFiveContainer, animatedStyle]}>
-      <View style={styles.articleFiveContent}>
-        <Text style={styles.articleFiveTitle}>{decodeHTML(item.title)}</Text>
-        <Image source={item.image} style={styles.articleFiveImage} />
-      </View>
-      <Text style={styles.articleFiveDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-      <View style={styles.articleFiveMetaInfo}>
-        <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-        <View style={styles.articleMetaInfoDivider} />
-        <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
-      </View>
+    <Animated.View style={animatedStyle}>
+      <TouchableOpacity onPress={handlePress} style={styles.articleFiveContainer}>
+        <View style={styles.articleFiveContent}>
+          <Text style={styles.articleFiveTitle}>{decodeHTML(item.title)}</Text>
+          <Image source={item.image} style={styles.articleFiveImage} />
+        </View>
+        <Text style={styles.articleFiveDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
+        <View style={styles.articleFiveMetaInfo}>
+          <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+          <View style={styles.articleMetaInfoDivider} />
+          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+        </View>
+      </TouchableOpacity>
     </Animated.View>
   );
 });
@@ -153,7 +199,12 @@ export const CustomArticle = memo(({ item, isFirst }: { item: NewsItemWp; isFirs
     opacity: opacity.value,
   }));
 
-  const handlePress = () => {};
+  const handlePress = () => {
+    router.push({
+      pathname: '/news/[id]',
+      params: { id: item.guid, data: JSON.stringify(item) },
+    });
+  };
   return (
     <Animated.View style={[styles.customArticleItem, isFirst && { marginLeft: 14 }, animatedStyle]}>
       <TouchableOpacity onPress={handlePress}>
