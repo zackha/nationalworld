@@ -1,18 +1,18 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, Animated, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, Animated, StyleSheet, useWindowDimensions } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
-import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { decodeHTML } from 'entities';
 import { categoriesData } from '@/services/apiWp';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import RenderHtml from 'react-native-render-html';
+import RenderHtml, { defaultSystemFonts } from 'react-native-render-html';
+import { HeaderThree } from '@/components/Header';
 
 dayjs.extend(relativeTime);
 
 export default function NewsDetailPage() {
-  const HEADER_HEIGHT = 60;
+  const HEADER_HEIGHT = 40;
   const SCROLL_THRESHOLD = 3;
 
   const [scrollY] = useState(new Animated.Value(0));
@@ -74,10 +74,13 @@ export default function NewsDetailPage() {
   const { width } = useWindowDimensions();
   const newsItem = typeof data === 'string' ? JSON.parse(data) : {};
 
+  const systemFonts = [...defaultSystemFonts, 'BBCReithSerifRg'];
+
   const tagsStyles = {
-    p: { color: 'white' },
-    figcaption: { color: 'red' },
-    img: { backgroundColor: 'red' },
+    body: { paddingHorizontal: 16 },
+    p: { color: 'white', fontFamily: 'BBCReithSerifRg', fontSize: 16, letterSpacing: -0.1, lineHeight: 26, marginVertical: 9 },
+    figcaption: { color: '#bbb', fontFamily: 'BBCReithSerifRg', fontSize: 12, lineHeight: 28 },
+    img: { backgroundColor: '#262626' },
   };
 
   console.log('newsItem', JSON.stringify(newsItem));
@@ -93,18 +96,27 @@ export default function NewsDetailPage() {
               height: headerHeight,
             },
           ]}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="white" />
-            <Text style={styles.headerText}>Back</Text>
-          </TouchableOpacity>
+          <HeaderThree />
         </Animated.View>
 
         <Animated.ScrollView style={styles.scrollView} onScroll={handleScroll} scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
-            {newsItem?.title && <Text style={styles.title}>{decodeHTML(newsItem.title)}</Text>}
-            {newsItem?.pubDate && <Text style={styles.date}>{dayjs(newsItem.pubDate).fromNow()}</Text>}
-            {newsItem?.content && <RenderHtml contentWidth={width} source={{ html: newsItem.content }} tagsStyles={tagsStyles} />}
-            {newsItem?.categories && <Text style={styles.categories}>{newsItem.categories.map((id: number) => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>}
+            <View style={{ paddingHorizontal: 16, paddingTop: 32, gap: 24 }}>
+              {newsItem?.title && <Text style={styles.title}>{decodeHTML(newsItem.title)}</Text>}
+              {newsItem?.pubDate && <Text style={styles.date}>{dayjs(newsItem.pubDate).fromNow()}</Text>}
+            </View>
+            {newsItem?.content && <RenderHtml contentWidth={width} source={{ html: newsItem.content }} tagsStyles={tagsStyles} systemFonts={systemFonts} />}
+            {newsItem?.categories && (
+              <View style={styles.categoriesContainer}>
+                {newsItem.categories
+                  .map((id: number) => categoriesData.find(cat => cat.id === id)?.name)
+                  .map((name: string, index: number) => (
+                    <Text key={index} style={styles.categoryTag}>
+                      {name}
+                    </Text>
+                  ))}
+              </View>
+            )}
           </View>
         </Animated.ScrollView>
       </View>
@@ -125,6 +137,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 10,
     overflow: 'hidden',
+    paddingHorizontal: 16,
   },
   backButton: {
     flexDirection: 'row',
@@ -137,26 +150,37 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    marginBottom: -60,
+    marginBottom: -40,
   },
   content: {
-    paddingTop: 60,
-    paddingBottom: 60,
+    paddingTop: 40,
+    paddingBottom: 40,
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontFamily: 'BBCReithSerifMd',
+    fontSize: 28,
+    letterSpacing: -0.8,
+    lineHeight: 36,
     color: 'white',
-    marginBottom: 8,
   },
   date: {
-    fontSize: 14,
-    color: '#AAAAAA',
-    marginBottom: 12,
+    fontFamily: 'BBCReithSansRg',
+    fontSize: 12,
+    color: '#ddd',
   },
-  categories: {
-    fontSize: 14,
-    color: '#AAAAAA',
-    marginBottom: 12,
+  categoriesContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    paddingVertical: 32,
+    gap: 10,
+  },
+  categoryTag: {
+    backgroundColor: '#212224',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    fontSize: 16,
+    color: '#fff',
   },
 });

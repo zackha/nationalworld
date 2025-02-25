@@ -14,7 +14,7 @@ export function ThemedView({ lightColor, darkColor, newsDetail, ...otherProps }:
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={[{ flex: 1, backgroundColor, paddingBottom: newsDetail ? 60 : 30 }]} edges={newsDetail ? ['top'] : ['top', 'bottom']} {...otherProps} />
+      <SafeAreaView style={[{ flex: 1, backgroundColor, paddingBottom: newsDetail ? 40 : 30 }]} edges={newsDetail ? ['top'] : ['top', 'bottom']} {...otherProps} />
     </SafeAreaProvider>
   );
 }
