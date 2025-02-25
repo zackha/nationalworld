@@ -24,6 +24,12 @@ export default function SimpleCollapsibleHeader() {
     extrapolate: 'clamp',
   });
 
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, HEADER_HEIGHT],
+    outputRange: [HEADER_HEIGHT, 0],
+    extrapolate: 'clamp',
+  });
+
   const handleScroll = (event: any) => {
     const currentOffsetY = event.nativeEvent.contentOffset.y;
     const diff = currentOffsetY - lastOffsetY.current;
@@ -33,7 +39,7 @@ export default function SimpleCollapsibleHeader() {
         Animated.timing(scrollY, {
           toValue: 0,
           duration: 200,
-          useNativeDriver: true,
+          useNativeDriver: false,
         }).start();
         headerVisible.current = true;
       }
@@ -42,7 +48,7 @@ export default function SimpleCollapsibleHeader() {
         Animated.timing(scrollY, {
           toValue: HEADER_HEIGHT,
           duration: 200,
-          useNativeDriver: true,
+          useNativeDriver: false,
         }).start();
         headerVisible.current = false;
       }
@@ -51,7 +57,7 @@ export default function SimpleCollapsibleHeader() {
         Animated.timing(scrollY, {
           toValue: 0,
           duration: 200,
-          useNativeDriver: true,
+          useNativeDriver: false,
         }).start();
         headerVisible.current = true;
       }
@@ -75,15 +81,20 @@ export default function SimpleCollapsibleHeader() {
   return (
     <ThemedView newsDetail>
       <View style={styles.container}>
-        {/* Animasyonlu Header */}
-        <Animated.View style={[styles.header, { transform: [{ translateY: headerTranslateY }] }]}>
+        <Animated.View
+          style={[
+            styles.header,
+            {
+              transform: [{ translateY: headerTranslateY }],
+              height: headerHeight,
+            },
+          ]}>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="white" />
             <Text style={styles.headerText}>Back</Text>
           </TouchableOpacity>
         </Animated.View>
 
-        {/* ScrollView */}
         <Animated.ScrollView style={styles.scrollView} onScroll={handleScroll} scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
             {newsItem?.title && <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white', marginBottom: 8 }}>{decodeHTML(newsItem.title)}</Text>}
@@ -107,7 +118,6 @@ export default function SimpleCollapsibleHeader() {
 const styles = StyleSheet.create({
   container: {},
   header: {
-    height: 60,
     backgroundColor: '#000',
     justifyContent: 'center',
     position: 'absolute',
@@ -115,6 +125,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 10,
+    overflow: 'hidden',
   },
   backButton: {
     flexDirection: 'row',
