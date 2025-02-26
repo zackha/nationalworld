@@ -77,8 +77,8 @@ export default function NewsDetailPage() {
   const systemFonts = [...defaultSystemFonts, 'BBCReithSerifRg'];
 
   const tagsStyles = {
-    body: { paddingHorizontal: 16 },
-    p: { color: 'white', fontFamily: 'BBCReithSerifRg', fontSize: 16, letterSpacing: -0.1, lineHeight: 26, marginVertical: 9 },
+    body: { paddingHorizontal: 16, color: 'white', fontFamily: 'BBCReithSerifRg' },
+    p: { fontSize: 16, letterSpacing: -0.1, lineHeight: 26, marginVertical: 9 },
     figcaption: { color: '#bbb', fontFamily: 'BBCReithSerifRg', fontSize: 12, lineHeight: 28 },
     img: { backgroundColor: '#262626' },
   };
