@@ -79,7 +79,7 @@ export default function NewsDetailPage() {
   const tagsStyles = {
     body: { paddingHorizontal: 16, color: 'white', fontFamily: 'BBCReithSerifRg' },
     p: { fontSize: 16, letterSpacing: -0.1, lineHeight: 26, marginVertical: 9 },
-    figcaption: { color: '#bbb', fontFamily: 'BBCReithSerifRg', fontSize: 12, lineHeight: 28 },
+    figcaption: { color: '#bbb', fontSize: 12, lineHeight: 28 },
     img: { backgroundColor: '#262626' },
   };
 
