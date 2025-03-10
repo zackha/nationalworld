@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     fontFamily: 'BBCReithSerifRg',
   },
   articleOneMetaInfo: {
-    marginTop: 10,
-    marginBottom: 2,
+    paddingTop: 10,
+    paddingBottom: 2,
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
@@ -74,7 +74,8 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   articleTwoMetaInfo: {
-    marginTop: 8,
+    maxWidth: '50%',
+    paddingTop: 8,
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     fontFamily: 'BBCReithSerifRg',
   },
   articleThreeMetaInfo: {
-    marginTop: 8,
+    paddingTop: 8,
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     fontFamily: 'BBCReithSerifRg',
   },
   articleFourMetaInfo: {
-    marginTop: 16,
+    paddingTop: 16,
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
@@ -177,7 +178,7 @@ const styles = StyleSheet.create({
     fontFamily: 'BBCReithSerifRg',
   },
   articleFiveMetaInfo: {
-    marginTop: 18,
+    paddingTop: 18,
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
