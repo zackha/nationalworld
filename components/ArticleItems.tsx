@@ -10,6 +10,7 @@ import styles from '@/styles/styles';
 import { categoriesData } from '@/services/apiWp';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 dayjs.extend(relativeTime);
 
 export const ArticleOne = memo((item: NewsItemWp) => {
@@ -37,10 +38,15 @@ export const ArticleOne = memo((item: NewsItemWp) => {
         <View style={styles.articleOneContent}>
           <Text style={styles.articleOneTitle}>{decodeHTML(item.title)}</Text>
           <Text style={styles.articleOneDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-          <View style={styles.articleOneMetaInfo}>
-            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-            <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={styles.articleOneMetaInfo}>
+              <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+              <View style={styles.articleMetaInfoDivider} />
+              <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+            </View>
+            <TouchableOpacity style={{ paddingTop: 10, paddingBottom: 2, paddingLeft: 10 }}>
+              <IconSymbol name="bookmark" size={16} color="#666" />
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
@@ -72,10 +78,17 @@ export const ArticleTwo = memo((item: NewsItemWp) => {
         <Image source={item.image} style={styles.articleTwoImage} />
         <View style={styles.articleTwoContent}>
           <Text style={styles.articleTwoTitle}>{decodeHTML(item.title)}</Text>
-          <View style={styles.articleTwoMetaInfo}>
-            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-            <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={styles.articleTwoMetaInfo}>
+              <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+              <View style={styles.articleMetaInfoDivider} />
+              <Text style={styles.articleMetaInfoText} numberOfLines={1} ellipsizeMode="tail">
+                {item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}
+              </Text>
+            </View>
+            <TouchableOpacity style={{ paddingTop: 8, paddingLeft: 10 }}>
+              <IconSymbol name="bookmark" size={16} color="#666" />
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
@@ -106,10 +119,15 @@ export const ArticleThree = memo((item: NewsItemWp) => {
       <TouchableOpacity onPress={handlePress} style={styles.articleThreeContainer}>
         <Text style={styles.articleThreeTitle}>{decodeHTML(item.title)}</Text>
         <Text style={styles.articleThreeDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-        <View style={styles.articleThreeMetaInfo}>
-          <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-          <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View style={styles.articleThreeMetaInfo}>
+            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+            <View style={styles.articleMetaInfoDivider} />
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+          </View>
+          <TouchableOpacity style={{ paddingTop: 8, paddingLeft: 10 }}>
+            <IconSymbol name="bookmark" size={16} color="#666" />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -141,10 +159,15 @@ export const ArticleFour = memo((item: NewsItemWp) => {
         <View style={styles.articleFourContent}>
           <Text style={styles.articleFourTitle}>{decodeHTML(item.title)}</Text>
           <Text style={styles.articleFourDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-          <View style={styles.articleFourMetaInfo}>
-            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-            <View style={styles.articleMetaInfoDivider} />
-            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={styles.articleFourMetaInfo}>
+              <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+              <View style={styles.articleMetaInfoDivider} />
+              <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+            </View>
+            <TouchableOpacity style={{ paddingTop: 16, paddingLeft: 10 }}>
+              <IconSymbol name="bookmark" size={16} color="#666" />
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
@@ -178,10 +201,15 @@ export const ArticleFive = memo((item: NewsItemWp) => {
           <Image source={item.image} style={styles.articleFiveImage} />
         </View>
         <Text style={styles.articleFiveDescription}>{decodeHTML(item.description.replace(/<\/?[^>]+(>|$)/g, '').trim())}</Text>
-        <View style={styles.articleFiveMetaInfo}>
-          <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
-          <View style={styles.articleMetaInfoDivider} />
-          <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View style={styles.articleFiveMetaInfo}>
+            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+            <View style={styles.articleMetaInfoDivider} />
+            <Text style={styles.articleMetaInfoText}>{item.categories.map(id => categoriesData.find(cat => cat.id === id)?.name).join(', ')}</Text>
+          </View>
+          <TouchableOpacity style={{ paddingTop: 18, paddingLeft: 10 }}>
+            <IconSymbol name="bookmark" size={16} color="#666" />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -212,7 +240,12 @@ export const CustomArticle = memo(({ item, isFirst }: { item: NewsItemWp; isFirs
           <LinearGradient colors={['transparent', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']} style={styles.customArticleGradient} />
           <View style={styles.customArticleContent}>
             <Text style={styles.customArticleTitle}>{decodeHTML(item.title)}</Text>
-            <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={styles.articleMetaInfoText}>{dayjs(item.pubDate).fromNow()}</Text>
+              <TouchableOpacity style={{ paddingLeft: 10 }}>
+                <IconSymbol name="bookmark" size={16} color="#666" />
+              </TouchableOpacity>
+            </View>
           </View>
         </ImageBackground>
       </TouchableOpacity>
