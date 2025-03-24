@@ -7,7 +7,8 @@
 - [ ] Add: Account Screen
   - [ ] UI: Add Dark Mode and Light Mode to the account management screen
 - [ ] Add: Saved Screen
-- [ ] Add: Article page screen
+- [x] Add: Article page screen
+- [ ] Add: Horizontal scollable article screen
 - [ ] Add: SplashScreen
 - [ ] Add: Onboarding screens
 - [ ] Add: Notification system
