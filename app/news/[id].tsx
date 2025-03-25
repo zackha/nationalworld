@@ -96,7 +96,7 @@ export default function NewsDetailPage() {
               height: headerHeight,
             },
           ]}>
-          <HeaderThree />
+          <HeaderThree newsItem={newsItem} />
         </Animated.View>
 
         <Animated.ScrollView style={styles.scrollView} onScroll={handleScroll} scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
