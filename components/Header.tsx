@@ -43,7 +43,7 @@ export const HeaderThree = ({ newsItem }: { newsItem: NewsItemWp }) => {
           <IconSymbol name="square.and.arrow.up" size={22} color="white" />
         </TouchableOpacity>**/}
         <TouchableOpacity onPress={handleToggleBookmark} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <Text style={{ color: 'white', fontFamily: 'BBCReithSansMd', fontSize: 16 }}>Save</Text>
+          <Text style={{ color: 'white', fontFamily: 'BBCReithSansMd', fontSize: 16 }}>{isBookmarked(newsItem.guid) ? 'Saved' : 'Save'}</Text>
           <IconSymbol name={isBookmarked(newsItem.guid) ? 'bookmark.fill' : 'bookmark'} size={20} color="white" />
         </TouchableOpacity>
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }} onPress={() => router.back()}>
