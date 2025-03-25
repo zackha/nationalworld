@@ -6,7 +6,7 @@
 - [x] Optimize: `ArticleItems` components and enhance animations
 - [ ] Add: Account Screen
   - [ ] UI: Add Dark Mode and Light Mode to the account management screen
-- [ ] Add: Saved Screen
+- [x] Add: Saved Screen
 - [x] Add: Article page screen
 - [ ] Add: Horizontal scollable article screen
 - [ ] Add: SplashScreen
