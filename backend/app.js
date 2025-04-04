@@ -57,7 +57,7 @@ app.get('/wp-json/wp/v2/posts', (req, res) => {
 
   setTimeout(() => {
     res.json(paginatedPosts);
-  }, 1000);
+  }, 500);
 });
 
 // Start the server
