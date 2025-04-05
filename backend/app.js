@@ -8,6 +8,7 @@ const port = 3001;
 
 // Define the path to the posts.json file
 const postsFilePath = path.join(new URL(import.meta.url).pathname, '..', 'posts.json');
+app.use('/assets', express.static(path.join(new URL(import.meta.url).pathname, '..', 'assets')));
 
 // Function to get the local IP address
 function getLocalIPAddress() {
