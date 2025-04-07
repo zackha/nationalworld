@@ -16,6 +16,7 @@ export default function HomeScreen() {
   const { refreshing, onRefresh } = useRefreshNews(selectedCategory, loadNews);
   const { onScrollBeginDrag, onMomentumScrollEnd, flatListRef } = useScrollHandlers(newsData, loadNews, setSelectedCategory);
 
+  console.log('selectedCategory:', selectedCategory);
   useEffect(() => {
     const category = categoriesData.find(c => c.name === selectedCategory);
     if (category && !newsData[selectedCategory]) {

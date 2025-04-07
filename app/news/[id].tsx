@@ -70,7 +70,7 @@ export default function NewsDetailPage() {
     headerVisible.current = true;
   };
 
-  const { data } = useLocalSearchParams();
+  const { data, id } = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const newsItem = typeof data === 'string' ? JSON.parse(data) : {};
 
@@ -82,8 +82,6 @@ export default function NewsDetailPage() {
     figcaption: { color: '#bbb', fontSize: 12, lineHeight: 16, paddingTop: 8 },
     img: { backgroundColor: '#262626' },
   };
-
-  console.log('newsItem', JSON.stringify(newsItem));
 
   return (
     <ThemedView newsDetail>

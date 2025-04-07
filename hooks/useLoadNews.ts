@@ -8,7 +8,6 @@ const useLoadNews = (selectedCategory: string = 'All') => {
   const [loading, setLoading] = useState<LoadingState>({});
   const [page, setPage] = useState<PaginationState>({});
   const [hasMore, setHasMore] = useState<HasMoreState>({});
-  console.log('selectedCategory:', selectedCategory);
 
   const loadNews = useCallback(
     async (categoryId: number = 0, categoryName: string = 'All', pageNumber: number = 1) => {
