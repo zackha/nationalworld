@@ -70,7 +70,7 @@ export default function NewsDetailPage() {
     headerVisible.current = true;
   };
 
-  const { data, id } = useLocalSearchParams();
+  const { data } = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const newsItem = typeof data === 'string' ? JSON.parse(data) : {};
 
